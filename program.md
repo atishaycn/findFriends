@@ -32,4 +32,5 @@
 - Direct returns to the inviter's parent are warnings, not loops.
 - Do not expose private emails in the UI or graph payloads.
 - Keep pages server-first and push interactivity into focused client components.
+- Every commit that changes shipped behavior must include verification, push to the tracked remote, and confirm the resulting Vercel deployment for `https://find.phunnysunny.com/`.
 - When behavior or workflow changes materially, update this brief in the same change.

@@ -34,13 +34,13 @@ export default async function InvitePage(props: PageProps<"/invite/[token]">) {
               Invite preview
             </p>
             <h1 className="mt-3 font-display text-5xl leading-none text-ink sm:text-6xl">
-              A node is waiting for you.
+              The chain landed on you.
             </h1>
             <p className="mt-4 text-base leading-8 text-ink/70">
               {preview.inviterDisplayName} sent you a live path into round{" "}
               <span className="font-semibold text-ink">{preview.roundSlug}</span>.
-              Claiming the link either creates your node or checks whether this edge
-              closes the round.
+              If you came in through this invite, claim it, become the next node,
+              and tag the next person to keep the chain alive.
             </p>
           </div>
           <StaticNetwork className="w-full max-w-xl" />

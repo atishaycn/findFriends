@@ -54,13 +54,35 @@ export function InviteClaimCard({
     }
 
     return (
-      <SignInPanel
-        nextPath={invitePath(preview.token)}
-        title="Sign in to claim your node"
-        subtitle={`This invite came from ${preview.inviterDisplayName}. Once your sign-in email opens on this device, you can claim the spot and continue the chain.`}
-        supabaseUrl={supabaseUrl}
-        supabaseAnonKey={supabaseAnonKey}
-      />
+      <div className="space-y-5">
+        <div className="invite-crown overflow-hidden rounded-[2rem] px-6 py-7 sm:px-8 sm:py-9">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/72">
+            Live invite
+          </p>
+          <h2 className="mt-3 font-display text-6xl leading-[0.86] text-white sm:text-7xl">
+            You&apos;re it
+          </h2>
+          <p className="mt-4 max-w-xl text-base leading-7 text-white/82">
+            {preview.inviterDisplayName} passed the chain to you. Claim your spot,
+            then tag the next person before the loop closes somewhere else.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/72">
+            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
+              Claim this node
+            </span>
+            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
+              Tag next person
+            </span>
+          </div>
+        </div>
+        <SignInPanel
+          nextPath={invitePath(preview.token)}
+          title="Sign in to keep it moving"
+          subtitle={`This invite came from ${preview.inviterDisplayName}. Open the sign-in link on this device, claim your node, and send the next invite forward.`}
+          supabaseUrl={supabaseUrl}
+          supabaseAnonKey={supabaseAnonKey}
+        />
+      </div>
     );
   }
 

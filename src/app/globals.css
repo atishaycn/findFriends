@@ -73,6 +73,28 @@ input {
   backdrop-filter: blur(22px);
 }
 
+.invite-crown {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 85% 20%, rgba(255, 196, 120, 0.24), transparent 24%),
+    linear-gradient(135deg, #16191a 0%, #2d312c 38%, #d66937 100%);
+  box-shadow:
+    0 22px 44px rgba(28, 25, 24, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.invite-crown::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.14) 46%, transparent 62%),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.18), transparent 22%);
+  pointer-events: none;
+}
+
 .ink-button {
   display: inline-flex;
   align-items: center;
