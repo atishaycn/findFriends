@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #faf6ef;
+  --ink: #191b1a;
+  --muted: #6d6b66;
+  --accent: #e7733b;
+  --accent-soft: rgba(231, 115, 59, 0.12);
+  --line: rgba(25, 27, 26, 0.1);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(231, 115, 59, 0.15), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(32, 43, 37, 0.08), transparent 22%),
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), sans-serif;
+}
+
+a,
+button,
+input {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.paper-grid {
+  position: relative;
+  overflow: hidden;
+}
+
+.paper-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(25, 27, 26, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+  pointer-events: none;
+  opacity: 0.68;
+}
+
+.ink-panel {
+  position: relative;
+  border: 1px solid rgba(25, 27, 26, 0.1);
+  background: rgba(255, 255, 255, 0.66);
+  border-radius: 2rem;
+  box-shadow:
+    0 14px 32px rgba(35, 32, 29, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(22px);
+}
+
+.ink-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.9rem 1.35rem;
+  font-weight: 600;
+}
+
+.ink-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(25, 27, 26, 0.18);
+}
+
+.ink-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(25, 27, 26, 0.14);
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--ink);
+  padding: 0.9rem 1.35rem;
+  font-weight: 600;
+}
+
+.ink-button-secondary:hover {
+  border-color: rgba(25, 27, 26, 0.26);
+  background: white;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(25, 27, 26, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.graph-surface {
+  background:
+    radial-gradient(circle at top right, rgba(231, 115, 59, 0.12), transparent 22%),
+    rgba(255, 255, 255, 0.66);
+}
+
+.graph-edge {
+  stroke: rgba(25, 27, 26, 0.58);
+  stroke-width: 3px;
+  stroke-dasharray: 8 10;
+  animation: draw-line 820ms ease forwards;
+}
+
+.graph-edge--completion {
+  stroke: rgba(231, 115, 59, 0.95);
+  stroke-width: 4px;
+  stroke-dasharray: 14 12;
+}
+
+.graph-node {
+  opacity: 0;
+  animation: fade-rise 620ms ease forwards;
+}
+
+@keyframes draw-line {
+  from {
+    opacity: 0;
+    stroke-dashoffset: 120;
+  }
+  to {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

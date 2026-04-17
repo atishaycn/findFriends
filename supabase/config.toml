@@ -1,0 +1,12 @@
+project_id = "findFriends"
+
+[auth]
+site_url = "http://localhost:3000"
+
+[auth.email.template.confirmation]
+subject = "Confirm your email for findFriends"
+content_path = "./supabase/templates/confirm-signup.html"
+
+[auth.email.template.magic_link]
+subject = "Your findFriends sign-in link"
+content_path = "./supabase/templates/magic-link.html"
