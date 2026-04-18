@@ -10,6 +10,7 @@ export function SignInPanel({
   title = "Sign in with email",
   subtitle = "Use email sign-in so every friend maps to one identity inside a round.",
   compact = false,
+  siteUrl,
   supabaseUrl,
   supabaseAnonKey,
 }: {
@@ -17,6 +18,7 @@ export function SignInPanel({
   title?: string;
   subtitle?: string;
   compact?: boolean;
+  siteUrl?: string;
   supabaseUrl?: string;
   supabaseAnonKey?: string;
 }) {
@@ -47,9 +49,11 @@ export function SignInPanel({
         supabaseUrl,
         supabaseAnonKey,
       });
-      const redirectTo = `${window.location.origin}${authCallbackPath(
-        nextPath,
-      )}`;
+      const redirectBaseUrl = siteUrl ?? window.location.origin;
+      const redirectTo = new URL(
+        authCallbackPath(nextPath),
+        redirectBaseUrl,
+      ).toString();
       const { error: authError } = await supabase.auth.signInWithOtp({
         email,
         options: {

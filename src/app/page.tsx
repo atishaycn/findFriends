@@ -44,8 +44,8 @@ export default async function Home({
                 Turn one invite into a social chain reaction.
               </h1>
               <p className="max-w-xl text-base leading-8 text-white/72 sm:text-lg">
-                Start a round, pass the link forward, and wait for the moment the
-                loop closes and the full friend map lights up.
+                findFriends starts a round, passes the link forward, and waits
+                for the moment the loop closes and the full friend map lights up.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -113,6 +113,7 @@ export default async function Home({
                   nextPath={nextPath}
                   title="Sign in and start the mischief"
                   subtitle="Use your email so each friend only claims one node in the chain."
+                  siteUrl={publicEnv.siteUrl}
                   supabaseUrl={publicEnv.supabaseUrl}
                   supabaseAnonKey={publicEnv.supabaseAnonKey}
                 />
