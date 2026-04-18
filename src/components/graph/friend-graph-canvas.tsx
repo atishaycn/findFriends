@@ -41,7 +41,7 @@ export function FriendGraphCanvas({
   const nodeIndex = new Map(positionedNodes.map((node) => [node.id, node]));
 
   return (
-    <div className="graph-surface overflow-hidden rounded-[2rem] border border-black/8 bg-white/72 p-4 shadow-[0_24px_80px_rgba(35,32,29,0.12)] sm:p-6">
+    <div className="graph-surface overflow-hidden rounded-[2rem] border border-[var(--line)] p-4 shadow-[0_24px_80px_-48px_rgba(31,36,31,0.34)] sm:p-6">
       <svg
         viewBox={`${minX} ${minY} ${maxX - minX} ${maxY - minY}`}
         className="h-[420px] w-full sm:h-[560px]"
@@ -54,10 +54,10 @@ export function FriendGraphCanvas({
             height="18"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="2" cy="2" r="1.2" fill="rgba(25,27,26,0.1)" />
+            <circle cx="2" cy="2" r="1.2" fill="rgba(18,23,20,0.08)" />
           </pattern>
           <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="16" stdDeviation="18" floodOpacity="0.12" />
+            <feDropShadow dx="0" dy="16" stdDeviation="18" floodOpacity="0.1" />
           </filter>
         </defs>
         <rect
@@ -97,16 +97,16 @@ export function FriendGraphCanvas({
           >
             <circle
               r="41"
-              fill={node.isStarter ? "rgba(231,115,59,0.16)" : "rgba(255,255,255,0.96)"}
-              stroke={node.isStarter ? "rgba(231,115,59,0.92)" : "rgba(25,27,26,0.76)"}
+              fill={node.isStarter ? "rgba(220,233,226,0.96)" : "rgba(255,255,255,0.96)"}
+              stroke={node.isStarter ? "rgba(47,108,87,0.84)" : "rgba(18,23,20,0.16)"}
               strokeWidth="3"
             />
             <text
               textAnchor="middle"
               dominantBaseline="central"
               fontFamily="var(--font-display)"
-              fontSize="26"
-              fill="rgba(25,27,26,0.92)"
+              fontSize="22"
+              fill="rgba(18,23,20,0.92)"
             >
               {node.label}
             </text>

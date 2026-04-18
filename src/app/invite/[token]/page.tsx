@@ -25,25 +25,34 @@ export default async function InvitePage(props: PageProps<"/invite/[token]">) {
   }
 
   return (
-    <main className="paper-grid min-h-screen">
+    <main className="app-shell">
       <SiteHeader userEmail={user?.email} />
-      <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[0.96fr_1.04fr] lg:items-start">
+      <div className="page-frame grid gap-8 lg:grid-cols-[0.84fr_1.16fr] lg:items-start">
         <section className="space-y-6">
-          <div className="ink-panel p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
-              Invite preview
-            </p>
-            <h1 className="mt-3 font-display text-5xl leading-none text-ink sm:text-6xl">
+          <div className="glass-panel p-6 md:p-7">
+            <p className="section-kicker">Invite preview</p>
+            <h1 className="section-title mt-3 max-w-[8ch]">
               The chain landed on you.
             </h1>
-            <p className="mt-4 text-base leading-8 text-ink/70">
+            <p className="body-copy mt-4 text-sm">
               {preview.inviterDisplayName} sent you a live path into round{" "}
-              <span className="font-semibold text-ink">{preview.roundSlug}</span>.
+              <span className="font-semibold text-[var(--ink)]">{preview.roundSlug}</span>.
               If you came in through this invite, claim it, become the next node,
               and tag the next person to keep the chain alive.
             </p>
           </div>
-          <StaticNetwork className="w-full max-w-xl" />
+          <div className="glass-panel p-6 md:p-7">
+            <p className="section-kicker">What happens next</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <div className="soft-panel p-4 text-sm leading-7 text-[var(--muted)]">
+                Claiming adds your node to the active graph.
+              </div>
+              <div className="soft-panel p-4 text-sm leading-7 text-[var(--muted)]">
+                Passing it straight back does not count as a closure.
+              </div>
+            </div>
+            <StaticNetwork className="mt-6 w-full max-w-xl" />
+          </div>
         </section>
 
         <InviteClaimCard

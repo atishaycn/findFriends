@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "@phosphor-icons/react";
 import { startTransition, useState } from "react";
 import { authCallbackPath } from "@/lib/routes";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
@@ -115,19 +116,17 @@ export function SignInPanel({
   }
 
   return (
-    <div className={`ink-panel orbital-panel ${compact ? "p-5" : "p-6 sm:p-8"}`}>
+    <div className={`glass-panel ${compact ? "p-5" : "p-6 md:p-7"}`}>
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Email sign-in
-        </p>
-        <h2 className="font-display text-4xl leading-none text-ink">{title}</h2>
-        <p className="max-w-md text-sm leading-7 text-white/72">{subtitle}</p>
+        <p className="section-kicker">Email sign-in</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
+          {title}
+        </h2>
+        <p className="body-copy max-w-[52ch] text-sm">{subtitle}</p>
       </div>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-        <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
-            Email
-          </span>
+        <label className="field-block">
+          <span className="field-label">Email</span>
           <input
             type="email"
             inputMode="email"
@@ -135,25 +134,35 @@ export function SignInPanel({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition placeholder:text-white/34 focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12"
+            className="text-input"
             required
           />
+          <span className="field-help">
+            One email equals one identity inside a round.
+          </span>
         </label>
         <button
           type="submit"
           disabled={isPending || !isConfigured}
-          className="ink-button w-full disabled:cursor-not-allowed disabled:opacity-55"
+          className="primary-button w-full disabled:cursor-not-allowed disabled:opacity-55"
         >
+          <ArrowRight size={16} weight="bold" />
           {isPending ? "Signing in..." : "Sign in"}
         </button>
+        {isPending ? (
+          <div className="grid gap-2">
+            <div className="skeleton h-3 rounded-full" />
+            <div className="skeleton h-3 w-4/5 rounded-full" />
+          </div>
+        ) : null}
       </form>
       {message ? (
-        <p className="mt-4 rounded-2xl border border-[rgba(255,209,102,0.32)] bg-[rgba(255,209,102,0.14)] px-4 py-3 text-sm text-ink">
+        <p className="notice-success mt-4">
           {message}
         </p>
       ) : null}
       {error ? (
-        <p className="mt-4 rounded-2xl border border-red-300/60 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p className="notice-error mt-4">
           {error}
         </p>
       ) : null}

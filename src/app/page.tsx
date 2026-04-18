@@ -1,7 +1,14 @@
-import Link from "next/link";
+import {
+  ArrowRight,
+  LinkSimpleHorizontal,
+  Path,
+  Sparkle,
+} from "@phosphor-icons/react/dist/ssr";
 import { SignInPanel } from "@/components/auth/sign-in-panel";
 import { SiteHeader } from "@/components/layout/site-header";
 import { StaticNetwork } from "@/components/layout/static-network";
+import { LiveSignalBoard } from "@/components/motion/live-signal-board";
+import { MagneticLink } from "@/components/motion/magnetic-link";
 import { getCurrentUser } from "@/lib/auth";
 import { getPublicEnv } from "@/lib/env";
 import { studioPath } from "@/lib/routes";
@@ -28,84 +35,92 @@ export default async function Home({
   const publicEnv = getPublicEnv();
 
   return (
-    <main className="paper-grid min-h-screen">
+    <main className="app-shell">
       <SiteHeader userEmail={user?.email} />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-5 py-8 sm:px-8 sm:py-10">
-        <section className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="space-y-8 py-4">
-            <div className="inline-flex rounded-full border border-white/14 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/72">
-              group chat energy, mapped
-            </div>
-            <div className="space-y-5">
-              <p className="font-display text-5xl leading-none text-white sm:text-7xl lg:text-[7rem]">
-                findFriends
-              </p>
-              <h1 className="max-w-3xl font-display text-5xl leading-[0.9] text-ink sm:text-6xl lg:text-[5.4rem]">
-                Turn one invite into a social chain reaction.
-              </h1>
-              <p className="max-w-xl text-base leading-8 text-white/72 sm:text-lg">
-                findFriends starts a round, passes the link forward, and waits
-                for the moment the loop closes and the full friend map lights up.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href={user ? studioPath() : "#sign-in"} className="ink-button">
-                {user ? "Open studio" : "Start a round"}
-              </Link>
-              <a href="#how-it-works" className="ink-button-secondary">
-                See how it plays
-              </a>
-            </div>
-            <div className="grid gap-3 text-sm text-white/70 sm:grid-cols-3">
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                One person per node
+      <div className="page-frame flex flex-col gap-10 md:gap-14">
+        <section className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+          <div className="flex min-h-[100dvh] flex-col justify-between gap-10 pb-6 pt-4 md:pb-10">
+            <div className="space-y-8">
+              <div className="chip-row">
+                <Sparkle size={15} weight="fill" className="text-[var(--accent)]" />
+                Private until the loop closes
               </div>
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                Works in any group chat
+              <div className="space-y-6">
+                <p className="section-kicker">findFriends rebuilt as Loop</p>
+                <h1 className="page-title max-w-[10ch]">
+                  Start the chain. Hide the map. Reveal the whole room later.
+                </h1>
+                <p className="body-copy max-w-[56ch]">
+                  Loop turns one invite into a quiet social experiment. Every friend
+                  claims a node, passes the link forward, and only the final,
+                  legitimate circle unlocks the full graph.
+                </p>
               </div>
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                Hidden map until the loop hits
+              <div className="flex flex-wrap gap-3">
+                <MagneticLink href={user ? studioPath() : "#sign-in"}>
+                  {user ? "Open studio" : "Start a round"}
+                  <ArrowRight size={16} weight="bold" />
+                </MagneticLink>
+                <MagneticLink href="#how-it-works" variant="secondary">
+                  See the flow
+                </MagneticLink>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:max-w-[36rem] md:grid-cols-[1.1fr_0.9fr]">
+              <div className="glass-panel p-5">
+                <p className="section-kicker">What stays hidden</p>
+                <p className="mt-3 text-xl font-semibold tracking-tight text-[var(--ink)]">
+                  Nobody sees the full graph while the chain is still alive.
+                </p>
+              </div>
+              <div className="soft-panel p-5">
+                <p className="section-kicker">What changes instantly</p>
+                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+                  A valid closing edge locks the round and reveals the final shape to
+                  everyone already inside.
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="hero-orbit p-6 sm:p-8">
-              <div className="absolute inset-0">
-                <div className="absolute left-[10%] top-[16%] h-20 w-20 rounded-full border border-white/18 bg-white/8" />
-                <div className="absolute left-[38%] top-[12%] h-10 w-10 rounded-full bg-[rgba(255,209,102,0.8)] shadow-[0_0_30px_rgba(255,209,102,0.55)]" />
-                <div className="absolute right-[14%] top-[28%] h-16 w-16 rounded-full border border-white/20 bg-[rgba(138,125,255,0.28)]" />
-                <div className="absolute bottom-[14%] left-[18%] h-14 w-14 rounded-full border border-white/18 bg-[rgba(255,141,93,0.24)]" />
-                <div className="absolute bottom-[18%] right-[16%] h-24 w-24 rounded-full border border-white/12 bg-white/6" />
-              </div>
-              <div className="relative flex h-full flex-col justify-between gap-8">
-                <div className="max-w-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-white/60">
-                    Live round preview
-                  </p>
-                  <p className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
-                    The best part is not knowing who closes it.
-                  </p>
+          <div className="space-y-4 lg:pt-[5vh]">
+            <div className="hero-slab p-5 md:p-7">
+              <div className="relative z-10 space-y-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="max-w-md">
+                    <p className="section-kicker">Asymmetric signal board</p>
+                    <p className="mt-3 text-2xl font-semibold tracking-tight text-[var(--ink)] md:text-3xl">
+                      Built to feel alive without exposing the answer too early.
+                    </p>
+                  </div>
+                  <div className="chip-row">
+                    <LinkSimpleHorizontal size={15} className="text-[var(--accent)]" />
+                    One person per node
+                  </div>
                 </div>
-                <StaticNetwork className="mx-auto w-full max-w-md" />
+                <LiveSignalBoard />
               </div>
             </div>
 
             {user ? (
-              <div className="ink-panel orbital-panel p-6 sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/62">
+              <div className="glass-panel p-6 md:p-7">
+                <p className="section-kicker">
                   Signed in
                 </p>
-                <h2 className="mt-3 font-display text-4xl leading-none text-ink">
-                  Pick up the round before someone else closes the loop.
+                <h2 className="section-title mt-3 max-w-[12ch]">
+                  Pick up your active rounds before somebody else closes one.
                 </h2>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-white/72">
-                  Your session is live. Open the studio to create a new chain or
-                  jump back into a round already in motion.
+                <p className="body-copy mt-4">
+                  Your session is live. The studio is where new chains start and
+                  active ones keep moving.
                 </p>
-                <Link href={studioPath()} className="ink-button mt-6 inline-flex">
-                  Go to studio
-                </Link>
+                <div className="mt-6">
+                  <MagneticLink href={studioPath()}>
+                    Go to studio
+                    <ArrowRight size={16} weight="bold" />
+                  </MagneticLink>
+                </div>
               </div>
             ) : (
               <div id="sign-in">
@@ -122,48 +137,86 @@ export default async function Home({
           </div>
         </section>
 
-        <section
-          id="how-it-works"
-          className="grid gap-4 lg:grid-cols-[0.78fr_1.22fr]"
-        >
-          <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/54">
+        <section id="how-it-works" className="grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
+          <div className="space-y-4 pt-2">
+            <p className="section-kicker">
               How it works
             </p>
-            <h2 className="font-display text-5xl leading-none text-ink">
-              Three moves. One reveal.
+            <h2 className="section-title max-w-[10ch]">
+              Three moves. One locked reveal.
             </h2>
+            <p className="body-copy">
+              The product only works if the mystery holds. Each stage keeps the
+              social mechanic clear without leaking the whole picture too soon.
+            </p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
             {[
               {
-                title: "Open",
-                body: "Create the round and put the first node on the board.",
+                title: "Open a private round",
+                body: "Start the first node, generate the first link, and keep the graph hidden while the chain begins.",
+                icon: Path,
               },
               {
-                title: "Pass",
-                body: "Each friend claims the link, then hands a new one to someone else.",
+                title: "Pass it forward",
+                body: "Each friend claims a single node, then sends a fresh invite to someone new instead of bouncing backward.",
+                icon: LinkSimpleHorizontal,
               },
               {
-                title: "Reveal",
-                body: "The first real loop locks the round and unlocks the graph for everyone inside it.",
+                title: "Reveal the final map",
+                body: "A legitimate loop locks the round and unlocks the full network for everyone already inside it.",
+                icon: Sparkle,
               },
             ].map((step, index) => (
               <article
                 key={step.title}
-                className="ink-panel orbital-panel flex min-h-56 flex-col justify-between p-6"
+                className={`${index === 2 ? "md:col-span-2" : ""} glass-panel flex min-h-56 flex-col justify-between p-6 md:p-7`}
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
-                  0{index + 1}
-                </p>
-                <div>
-                  <h3 className="font-display text-4xl leading-none text-ink">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="chip-row">
+                    <step.icon size={15} className="text-[var(--accent)]" />
+                    Step 0{index + 1}
+                  </div>
+                  <span className="font-mono text-sm text-[rgba(18,23,20,0.38)]">
+                    0{index + 1}
+                  </span>
+                </div>
+                <div className="mt-10">
+                  <h3 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
                     {step.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-white/72">{step.body}</p>
+                  <p className="mt-4 max-w-[44ch] text-sm leading-7 text-[var(--muted)]">
+                    {step.body}
+                  </p>
                 </div>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-[0.76fr_1.24fr]">
+          <div className="glass-panel flex flex-col justify-between gap-8 p-6 md:p-7">
+            <div>
+              <p className="section-kicker">Static preview</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
+                The final structure feels clean because the work stayed hidden until the end.
+              </h2>
+            </div>
+            <StaticNetwork className="w-full max-w-lg" />
+          </div>
+          <div className="glass-panel p-6 md:p-7">
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                "Every invite is attributable to a single participant.",
+                "Direct send-backs are warnings, not a valid closure.",
+                "Any group chat works because the link is the transport layer.",
+                "Finished rounds unlock a clean graph instead of a noisy feed.",
+              ].map((line) => (
+                <div key={line} className="soft-panel p-5 text-sm leading-7 text-[var(--muted)]">
+                  {line}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>

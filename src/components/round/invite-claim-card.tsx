@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowRight, LinkSimpleHorizontal } from "@phosphor-icons/react";
 import { startTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignInPanel } from "@/components/auth/sign-in-panel";
@@ -40,14 +41,12 @@ export function InviteClaimCard({
   if (!isAuthenticated) {
     if (preview.roundStatus === "completed" && !preview.viewerParticipantId) {
       return (
-        <div className="ink-panel orbital-panel p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-            Round closed
-          </p>
-          <h2 className="mt-2 text-3xl font-semibold text-ink">
+        <div className="glass-panel p-6 md:p-7">
+          <p className="section-kicker">Round closed</p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--ink)]">
             This graph already completed.
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-7 text-white/72">
+          <p className="body-copy mt-3 text-sm">
             The valid loop has already been found, so this invite no longer accepts a
             new participant.
           </p>
@@ -57,22 +56,20 @@ export function InviteClaimCard({
 
     return (
       <div className="space-y-5">
-        <div className="invite-crown overflow-hidden rounded-[2rem] px-6 py-7 sm:px-8 sm:py-9">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/72">
-            Live invite
-          </p>
-          <h2 className="mt-3 font-display text-6xl leading-[0.86] text-white sm:text-7xl">
-            You&apos;re it
+        <div className="hero-slab overflow-hidden px-6 py-7 md:px-8 md:py-9">
+          <p className="section-kicker">Live invite</p>
+          <h2 className="section-title mt-3 max-w-[7ch]">
+            The chain landed on you.
           </h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-white/82">
+          <p className="body-copy mt-4 max-w-[54ch] text-sm">
             {preview.inviterDisplayName} passed the chain to you. Claim your spot,
             then tag the next person before the loop closes somewhere else.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/72">
-            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(18,23,20,0.62)]">
+            <span className="chip-row">
               Claim this node
             </span>
-            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
+            <span className="chip-row">
               Tag next person
             </span>
           </div>
@@ -174,17 +171,15 @@ export function InviteClaimCard({
 
   if (preview.roundStatus === "completed" && preview.viewerParticipantId) {
     return (
-      <div className="ink-panel orbital-panel p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Final graph
-        </p>
-        <h2 className="mt-2 text-3xl font-semibold text-ink">
+      <div className="glass-panel p-6 md:p-7">
+        <p className="section-kicker">Final graph</p>
+        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--ink)]">
           This round is already complete.
         </h2>
-        <p className="mt-3 text-sm leading-7 text-white/72">
+        <p className="body-copy mt-3 text-sm">
           You are already part of it. Open the finished graph to see every connection.
         </p>
-        <Link href={roundGraphPath(preview.roundSlug)} className="ink-button mt-6 inline-flex">
+        <Link href={roundGraphPath(preview.roundSlug)} className="primary-button mt-6 inline-flex">
           Open final graph
         </Link>
       </div>
@@ -192,58 +187,65 @@ export function InviteClaimCard({
   }
 
   return (
-    <div className="ink-panel orbital-panel p-6 sm:p-8">
+    <div className="glass-panel p-6 md:p-7">
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Claim invite
-        </p>
-        <h2 className="text-3xl font-semibold text-ink">
+        <p className="section-kicker">Claim invite</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-[var(--ink)]">
           {preview.inviterDisplayName} sent you a live link.
         </h2>
-        <p className="max-w-xl text-sm leading-7 text-white/72">
+        <p className="body-copy max-w-[52ch] text-sm">
           Use your display name for this round. If you already belong to the graph,
           claiming this link may either warn you about a direct return or close the
           full loop.
         </p>
       </div>
-      <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/7 p-4 text-sm text-white/72">
-        Signed in as <span className="font-semibold text-ink">{userEmail}</span>
+      <div className="mt-5 rounded-[1.5rem] border border-[var(--line)] bg-white/60 p-4 text-sm text-[var(--muted)]">
+        Signed in as <span className="font-semibold text-[var(--ink)]">{userEmail}</span>
       </div>
       <form onSubmit={handleClaim} className="mt-6 space-y-4">
-        <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
-            Display name
-          </span>
+        <label className="field-block">
+          <span className="field-label">Display name</span>
           <input
             type="text"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
             readOnly={Boolean(preview.viewerParticipantId)}
-            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12 read-only:bg-white/5"
+            className="text-input read-only:bg-[rgba(18,23,20,0.04)]"
             required={!preview.viewerParticipantId}
             minLength={2}
             maxLength={24}
           />
+          <span className="field-help">
+            This stays attached to your node for the rest of the round.
+          </span>
         </label>
         <button
           type="submit"
           disabled={isPending}
-          className="ink-button w-full disabled:cursor-not-allowed disabled:opacity-55"
+          className="primary-button w-full disabled:cursor-not-allowed disabled:opacity-55"
         >
+          <LinkSimpleHorizontal size={16} weight="bold" />
           {isPending ? "Claiming..." : "Claim this node"}
         </button>
+        {isPending ? (
+          <div className="grid gap-2">
+            <div className="skeleton h-3 rounded-full" />
+            <div className="skeleton h-3 w-4/5 rounded-full" />
+          </div>
+        ) : null}
       </form>
       {notice ? (
-        <div className="mt-5 rounded-[1.6rem] border border-[rgba(255,141,93,0.3)] bg-[rgba(255,141,93,0.12)] p-5">
-          <h3 className="text-lg font-semibold text-ink">{notice.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-white/76">{notice.body}</p>
-          <Link href={notice.href} className="ink-button mt-4 inline-flex">
+        <div className="mt-5 rounded-[1.6rem] border border-[rgba(47,108,87,0.14)] bg-[rgba(220,233,226,0.78)] p-5">
+          <h3 className="text-lg font-semibold text-[var(--ink)]">{notice.title}</h3>
+          <p className="mt-2 text-sm leading-7 text-[rgba(33,81,65,0.84)]">{notice.body}</p>
+          <Link href={notice.href} className="primary-button mt-4 inline-flex">
+            <ArrowRight size={16} weight="bold" />
             {notice.action}
           </Link>
         </div>
       ) : null}
       {error ? (
-        <p className="mt-4 rounded-2xl border border-red-300/60 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p className="notice-error mt-4">
           {error}
         </p>
       ) : null}

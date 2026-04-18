@@ -15,6 +15,7 @@
 - `src/app/`: pages, layouts, route handlers.
 - `src/lib/`: auth, database, validation, query, email, and route helpers.
 - `src/components/`: client and server UI building blocks.
+- `src/components/motion/`: isolated client-only motion surfaces used by the redesigned UI shell.
 - `supabase/config.toml`: local/self-hosted Supabase auth config, including branded auth email subjects.
 - `supabase/schema.sql`: canonical database schema for rounds, participants, invites, and connections.
 - `supabase/templates/`: Supabase auth email HTML templates.
@@ -33,6 +34,7 @@
 - Direct returns to the inviter's parent are warnings, not loops.
 - Do not expose private emails in the UI or graph payloads.
 - Keep pages server-first and push interactivity into focused client components.
+- Keep continuous or cursor-driven motion isolated to small client leaf components so server layouts remain static and cheap to render.
 - Treat Supabase browser auth config as valid when the URL is set and either supported public key is present.
 - Every commit that changes shipped behavior must include verification, push to the tracked remote, and confirm the resulting Vercel deployment for `https://find.phunnysunny.com/`.
 - When behavior or workflow changes materially, update this brief in the same change.
