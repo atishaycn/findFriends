@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #faf6ef;
-  --ink: #191b1a;
-  --muted: #6d6b66;
-  --accent: #e7733b;
-  --accent-soft: rgba(231, 115, 59, 0.12);
-  --line: rgba(25, 27, 26, 0.1);
+  --paper: #0a1020;
+  --paper-deep: #070b16;
+  --ink: #f4f0e8;
+  --muted: #b0b9d3;
+  --accent: #ff8d5d;
+  --accent-strong: #ffd166;
+  --violet: #8a7dff;
+  --line: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
@@ -23,15 +25,16 @@
 }
 
 html {
-  background: var(--paper);
+  background: var(--paper-deep);
 }
 
 body {
   min-height: 100%;
   background:
-    radial-gradient(circle at top left, rgba(231, 115, 59, 0.15), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(32, 43, 37, 0.08), transparent 22%),
-    var(--paper);
+    radial-gradient(circle at 15% 20%, rgba(138, 125, 255, 0.24), transparent 26%),
+    radial-gradient(circle at 85% 0%, rgba(255, 141, 93, 0.22), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(255, 209, 102, 0.14), transparent 34%),
+    linear-gradient(180deg, #101935 0%, #0a1020 54%, #070b16 100%);
   color: var(--ink);
   font-family: var(--font-sans), sans-serif;
 }
@@ -44,45 +47,82 @@ input {
     border-color 180ms ease,
     color 180ms ease,
     box-shadow 180ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    opacity 180ms ease;
 }
 
 .paper-grid {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .paper-grid::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(25, 27, 26, 0.12) 1px, transparent 1px);
-  background-size: 22px 22px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 55%, transparent 100%);
+  opacity: 0.34;
   pointer-events: none;
-  opacity: 0.68;
+  animation: drift-grid 18s linear infinite;
+}
+
+.paper-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px),
+    radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.1) 0 1.5px, transparent 1.5px),
+    radial-gradient(circle at 42% 72%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px);
+  background-size: 220px 220px, 280px 280px, 180px 180px;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .ink-panel {
   position: relative;
-  border: 1px solid rgba(25, 27, 26, 0.1);
-  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07)),
+    rgba(7, 11, 22, 0.54);
   border-radius: 2rem;
   box-shadow:
-    0 14px 32px rgba(35, 32, 29, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(22px);
+    0 22px 52px rgba(2, 6, 18, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(24px);
+}
+
+.orbital-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.orbital-panel::before {
+  content: "";
+  position: absolute;
+  inset: -30% auto auto -10%;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 209, 102, 0.22), transparent 70%);
+  pointer-events: none;
 }
 
 .invite-crown {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 34%),
-    radial-gradient(circle at 85% 20%, rgba(255, 196, 120, 0.24), transparent 24%),
-    linear-gradient(135deg, #16191a 0%, #2d312c 38%, #d66937 100%);
+    radial-gradient(circle at 12% 18%, rgba(255, 209, 102, 0.26), transparent 26%),
+    radial-gradient(circle at 82% 22%, rgba(138, 125, 255, 0.32), transparent 32%),
+    linear-gradient(140deg, #121c3f 0%, #1b2556 38%, #ff8d5d 100%);
   box-shadow:
-    0 22px 44px rgba(28, 25, 24, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    0 28px 60px rgba(3, 8, 24, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .invite-crown::before {
@@ -90,9 +130,44 @@ input {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.14) 46%, transparent 62%),
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.18), transparent 22%);
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.22), transparent 22%),
+    linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.12) 48%, transparent 62%);
   pointer-events: none;
+}
+
+.hero-orbit {
+  position: relative;
+  min-height: 28rem;
+  border-radius: 2.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(circle at center, rgba(138, 125, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.12), transparent 14%),
+    linear-gradient(180deg, rgba(11, 16, 34, 0.9), rgba(7, 11, 22, 0.7));
+  overflow: hidden;
+  box-shadow:
+    0 30px 70px rgba(2, 8, 24, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.hero-orbit::before,
+.hero-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transform: translate(-50%, -50%);
+}
+
+.hero-orbit::before {
+  width: 72%;
+  height: 72%;
+}
+
+.hero-orbit::after {
+  width: 44%;
+  height: 44%;
 }
 
 .ink-button {
@@ -101,15 +176,16 @@ input {
   justify-content: center;
   gap: 0.55rem;
   border-radius: 999px;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 0.9rem 1.35rem;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: #10131d;
+  padding: 0.95rem 1.45rem;
+  font-weight: 700;
+  box-shadow: 0 16px 34px rgba(255, 141, 93, 0.28);
 }
 
 .ink-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(25, 27, 26, 0.18);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 22px 42px rgba(255, 141, 93, 0.34);
 }
 
 .ink-button-secondary {
@@ -118,46 +194,46 @@ input {
   justify-content: center;
   gap: 0.55rem;
   border-radius: 999px;
-  border: 1px solid rgba(25, 27, 26, 0.14);
-  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
   color: var(--ink);
-  padding: 0.9rem 1.35rem;
+  padding: 0.95rem 1.45rem;
   font-weight: 600;
 }
 
 .ink-button-secondary:hover {
-  border-color: rgba(25, 27, 26, 0.26);
-  background: white;
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .status-pill {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(25, 27, 26, 0.12);
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
   padding: 0.55rem 0.9rem;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
 .graph-surface {
   background:
-    radial-gradient(circle at top right, rgba(231, 115, 59, 0.12), transparent 22%),
-    rgba(255, 255, 255, 0.66);
+    radial-gradient(circle at top right, rgba(255, 209, 102, 0.12), transparent 22%),
+    rgba(255, 255, 255, 0.04);
 }
 
 .graph-edge {
-  stroke: rgba(25, 27, 26, 0.58);
+  stroke: rgba(255, 255, 255, 0.62);
   stroke-width: 3px;
   stroke-dasharray: 8 10;
   animation: draw-line 820ms ease forwards;
 }
 
 .graph-edge--completion {
-  stroke: rgba(231, 115, 59, 0.95);
+  stroke: rgba(255, 141, 93, 0.95);
   stroke-width: 4px;
   stroke-dasharray: 14 12;
 }
@@ -165,6 +241,22 @@ input {
 .graph-node {
   opacity: 0;
   animation: fade-rise 620ms ease forwards;
+}
+
+.aurora-copy {
+  background: linear-gradient(135deg, #fff5d7 0%, #ffd166 45%, #ff8d5d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes drift-grid {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(72px);
+  }
 }
 
 @keyframes draw-line {

@@ -123,10 +123,10 @@ export function RoundWorkspace({
   return (
     <div className="space-y-6">
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="ink-panel space-y-5 p-6 sm:p-8">
+        <div className="ink-panel orbital-panel space-y-5 p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">
                 Round {workspace.slug}
               </p>
               <h1 className="mt-2 font-display text-5xl leading-none text-ink sm:text-6xl">
@@ -143,46 +143,46 @@ export function RoundWorkspace({
               {workspace.status === "completed" ? "Complete" : "Active"}
             </span>
           </div>
-          <p className="max-w-2xl text-sm leading-7 text-ink/70">
+          <p className="max-w-2xl text-sm leading-7 text-white/72">
             {workspace.participant.parentDisplayName
               ? `${workspace.participant.parentDisplayName} pulled you into this round. Direct send-backs do not count, so keep the chain moving forward.`
               : "You started this round. Every invite adds a new friend unless the link comes straight back to the previous sender."}
           </p>
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-ink/48">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
                 Friends in play
               </p>
               <p className="mt-3 text-3xl font-semibold text-ink">
                 {workspace.totalParticipants}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-ink/48">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
                 Pending invites
               </p>
               <p className="mt-3 text-3xl font-semibold text-ink">
                 {workspace.pendingInvites}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-ink/48">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
                 Started
               </p>
-              <p className="mt-3 text-sm leading-6 text-ink/72">
+              <p className="mt-3 text-sm leading-6 text-white/72">
                 {formatTimestamp(workspace.createdAt)}
               </p>
             </div>
           </div>
           {workspace.status === "completed" ? (
-            <div className="rounded-[1.6rem] border border-accent/28 bg-accent/10 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+            <div className="rounded-[1.6rem] border border-[rgba(255,141,93,0.3)] bg-[rgba(255,141,93,0.12)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[rgba(255,209,102,0.9)]">
                 Final reveal
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-ink">
                 Your connection loop is closed.
               </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-ink/72">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-white/76">
                 The round locked on {formatTimestamp(workspace.completedAt)}. The
                 full graph is live now.
               </p>
@@ -197,15 +197,15 @@ export function RoundWorkspace({
             </div>
           ) : null}
         </div>
-        <aside className="ink-panel p-6 sm:p-8">
+        <aside className="ink-panel orbital-panel p-6 sm:p-8">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">
               Share
             </p>
             <h2 className="text-2xl font-semibold text-ink">
               Send the next link.
             </h2>
-            <p className="text-sm leading-6 text-ink/68">
+            <p className="text-sm leading-7 text-white/72">
               Generate a fresh invite, paste it into WhatsApp or iMessage, and let
               the next friend claim it.
             </p>
@@ -219,11 +219,11 @@ export function RoundWorkspace({
             {isCreatingInvite ? "Drawing invite..." : "Generate invite"}
           </button>
           {latestInvite ? (
-            <div className="mt-5 rounded-[1.6rem] border border-black/8 bg-white/78 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink/52">
+            <div className="mt-5 rounded-[1.6rem] border border-white/10 bg-white/7 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/48">
                 Latest link
               </p>
-              <p className="mt-3 break-all text-sm leading-6 text-ink/80">
+              <p className="mt-3 break-all text-sm leading-6 text-white/80">
                 {latestInvite.shareUrl}
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
@@ -249,30 +249,30 @@ export function RoundWorkspace({
         </aside>
       </section>
 
-      <section className="ink-panel p-6 sm:p-8">
+      <section className="ink-panel orbital-panel p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">
               Your outgoing links
             </p>
             <h2 className="mt-2 text-2xl font-semibold text-ink">
               Track what left your node.
             </h2>
           </div>
-          <p className="max-w-sm text-sm leading-6 text-ink/66">
+          <p className="max-w-sm text-sm leading-6 text-white/66">
             You can only see your own outbound links until the round closes.
           </p>
         </div>
         <div className="mt-6 space-y-3">
           {workspace.invites.length === 0 ? (
-            <div className="rounded-[1.6rem] border border-dashed border-black/14 bg-white/48 p-5 text-sm text-ink/62">
+            <div className="rounded-[1.6rem] border border-dashed border-white/16 bg-white/5 p-5 text-sm text-white/62">
               No links sent yet. Generate the first one when you are ready.
             </div>
           ) : (
             workspace.invites.map((invite) => (
               <div
                 key={invite.id}
-                className="flex flex-col gap-3 rounded-[1.6rem] border border-black/8 bg-white/78 p-4 md:flex-row md:items-center md:justify-between"
+                className="flex flex-col gap-3 rounded-[1.6rem] border border-white/10 bg-white/7 p-4 md:flex-row md:items-center md:justify-between"
               >
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-ink">

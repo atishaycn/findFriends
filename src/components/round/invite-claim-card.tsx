@@ -38,14 +38,14 @@ export function InviteClaimCard({
   if (!isAuthenticated) {
     if (preview.roundStatus === "completed" && !preview.viewerParticipantId) {
       return (
-        <div className="ink-panel p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+        <div className="ink-panel orbital-panel p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
             Round closed
           </p>
           <h2 className="mt-2 text-3xl font-semibold text-ink">
             This graph already completed.
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-ink/68">
+          <p className="mt-3 max-w-xl text-sm leading-7 text-white/72">
             The valid loop has already been found, so this invite no longer accepts a
             new participant.
           </p>
@@ -171,14 +171,14 @@ export function InviteClaimCard({
 
   if (preview.roundStatus === "completed" && preview.viewerParticipantId) {
     return (
-      <div className="ink-panel p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+      <div className="ink-panel orbital-panel p-6 sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
           Final graph
         </p>
         <h2 className="mt-2 text-3xl font-semibold text-ink">
           This round is already complete.
         </h2>
-        <p className="mt-3 text-sm leading-6 text-ink/68">
+        <p className="mt-3 text-sm leading-7 text-white/72">
           You are already part of it. Open the finished graph to see every connection.
         </p>
         <Link href={roundGraphPath(preview.roundSlug)} className="ink-button mt-6 inline-flex">
@@ -189,26 +189,26 @@ export function InviteClaimCard({
   }
 
   return (
-    <div className="ink-panel p-6 sm:p-8">
+    <div className="ink-panel orbital-panel p-6 sm:p-8">
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
           Claim invite
         </p>
         <h2 className="text-3xl font-semibold text-ink">
           {preview.inviterDisplayName} sent you a live link.
         </h2>
-        <p className="max-w-xl text-sm leading-6 text-ink/68">
+        <p className="max-w-xl text-sm leading-7 text-white/72">
           Use your display name for this round. If you already belong to the graph,
           claiming this link may either warn you about a direct return or close the
           full loop.
         </p>
       </div>
-      <div className="mt-5 rounded-[1.5rem] border border-black/8 bg-white/72 p-4 text-sm text-ink/72">
+      <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/7 p-4 text-sm text-white/72">
         Signed in as <span className="font-semibold text-ink">{userEmail}</span>
       </div>
       <form onSubmit={handleClaim} className="mt-6 space-y-4">
         <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-ink/52">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
             Display name
           </span>
           <input
@@ -216,7 +216,7 @@ export function InviteClaimCard({
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
             readOnly={Boolean(preview.viewerParticipantId)}
-            className="w-full rounded-[1.35rem] border border-black/10 bg-white/80 px-4 py-3 text-base text-ink outline-none transition focus:border-accent focus:bg-white read-only:bg-stone-100"
+            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12 read-only:bg-white/5"
             required={!preview.viewerParticipantId}
             minLength={2}
             maxLength={24}
@@ -231,9 +231,9 @@ export function InviteClaimCard({
         </button>
       </form>
       {notice ? (
-        <div className="mt-5 rounded-[1.6rem] border border-accent/28 bg-accent/10 p-5">
+        <div className="mt-5 rounded-[1.6rem] border border-[rgba(255,141,93,0.3)] bg-[rgba(255,141,93,0.12)] p-5">
           <h3 className="text-lg font-semibold text-ink">{notice.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-ink/72">{notice.body}</p>
+          <p className="mt-2 text-sm leading-6 text-white/76">{notice.body}</p>
           <Link href={notice.href} className="ink-button mt-4 inline-flex">
             {notice.action}
           </Link>
