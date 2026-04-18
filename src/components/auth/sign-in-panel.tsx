@@ -71,7 +71,7 @@ export function SignInPanel({
       setError(
         submitError instanceof Error
           ? submitError.message === "Invalid API key"
-            ? "Supabase public config does not match. NEXT_PUBLIC_SUPABASE_URL and the public key must come from the same Supabase project."
+            ? "Supabase rejected the public browser key. Replace NEXT_PUBLIC_SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY with the current public key for this Supabase project."
             : submitError.message
           : "Could not send the sign-in email.",
       );

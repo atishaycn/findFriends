@@ -73,9 +73,11 @@ RESEND_API_KEY=...
 RESEND_FROM_EMAIL=...
 ```
 
-If the deployed sign-in form shows `Invalid API key`, the public Supabase key in
-Vercel usually does not match `NEXT_PUBLIC_SUPABASE_URL`, or the wrong key type
-was pasted for that Supabase project.
+If the deployed sign-in form shows `Invalid API key`, the browser public key in
+Vercel is invalid for that project. Replace
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+with the current public key from the same Supabase project as
+`NEXT_PUBLIC_SUPABASE_URL`.
 
 ## Commands
 

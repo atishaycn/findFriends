@@ -26,7 +26,7 @@
 - `npm run test`: Vitest unit coverage for core round logic.
 - `npm run build`: production build verification.
 - `npm run db:push`: apply `supabase/schema.sql` to the configured database.
-- Vercel Production must define `NEXT_PUBLIC_SUPABASE_URL` plus one matching public browser key: `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+- Vercel Production must define `NEXT_PUBLIC_SUPABASE_URL` plus one current public browser key for that same Supabase project: `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
 ## Working Rules
 - Preserve the round invariant: a round is a tree plus one valid closing edge.
