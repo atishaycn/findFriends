@@ -20,78 +20,119 @@ function suggestDisplayName(email: string | undefined) {
 export default async function StudioPage() {
   const user = await requirePageUser(studioPath());
   const rounds = await listUserRounds(user.id);
+  const activeRounds = rounds.filter((round) => round.status === "active").length;
 
   return (
     <main className="paper-grid min-h-screen">
       <SiteHeader userEmail={user.email} />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-10 sm:px-8">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 sm:py-10">
+        <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/54">
+              Studio
+            </p>
+            <h1 className="font-display text-5xl leading-[0.92] text-ink sm:text-6xl lg:text-7xl">
+              Keep your rounds playful, not chaotic.
+            </h1>
+            <p className="max-w-2xl text-base leading-8 text-white/70">
+              Start a fresh chain, track the ones you already touched, and jump to
+              the final graph as soon as one closes.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="ink-panel p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
+                Total rounds
+              </p>
+              <p className="mt-3 text-4xl font-semibold text-ink">{rounds.length}</p>
+            </div>
+            <div className="ink-panel p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
+                Active now
+              </p>
+              <p className="mt-3 text-4xl font-semibold text-ink">{activeRounds}</p>
+            </div>
+            <div className="ink-panel p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
+                Signed in as
+              </p>
+              <p className="mt-3 break-all text-sm leading-6 text-white/74">
+                {user.email}
+              </p>
+            </div>
+          </div>
+        </section>
+
         <CreateRoundCard suggestedName={suggestDisplayName(user.email)} />
 
         <section className="space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
                 Your rounds
               </p>
-              <h1 className="mt-2 font-display text-5xl leading-none text-ink">
-                Keep the right chain moving.
-              </h1>
+              <h2 className="mt-2 font-display text-5xl leading-none text-ink">
+                Pick the thread you want to keep alive.
+              </h2>
             </div>
-            <p className="max-w-md text-sm leading-6 text-ink/66">
-              Active rounds show only your own outbound links. Completed rounds open
-              the full graph.
+            <p className="max-w-md text-sm leading-7 text-white/66">
+              Active rounds only expose your own outbound links. Completed ones
+              unlock the full network and the final reveal.
             </p>
           </div>
 
           {rounds.length === 0 ? (
-            <div className="ink-panel p-8">
-              <p className="text-sm leading-7 text-ink/68">
-                You have not started or joined any rounds yet. Create one above to
-                lay down the first node.
+            <div className="ink-panel orbital-panel p-8">
+              <p className="max-w-xl text-sm leading-7 text-white/72">
+                Nothing is in motion yet. Create a round above and start the first
+                pass.
               </p>
             </div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-2">
               {rounds.map((round) => (
-                <article key={round.slug} className="ink-panel p-6">
+                <article
+                  key={round.slug}
+                  className="ink-panel orbital-panel flex flex-col gap-5 p-6"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">
                         Round {round.slug}
                       </p>
-                      <h2 className="mt-2 text-2xl font-semibold text-ink">
+                      <h3 className="mt-2 font-display text-4xl leading-none text-ink">
                         {round.myDisplayName}
-                      </h2>
+                      </h3>
                     </div>
                     <span className="status-pill">
                       {round.status === "completed" ? "Complete" : "Active"}
                     </span>
                   </div>
-                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1.4rem] border border-black/8 bg-white/72 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-ink/48">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/46">
                         Friends
                       </p>
-                      <p className="mt-2 text-2xl font-semibold text-ink">
+                      <p className="mt-2 text-3xl font-semibold text-ink">
                         {round.totalParticipants}
                       </p>
                     </div>
-                    <div className="rounded-[1.4rem] border border-black/8 bg-white/72 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-ink/48">
+                    <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/46">
                         Invites sent
                       </p>
-                      <p className="mt-2 text-2xl font-semibold text-ink">
+                      <p className="mt-2 text-3xl font-semibold text-ink">
                         {round.invitesSent}
                       </p>
                     </div>
                   </div>
-                  <p className="mt-5 text-sm leading-6 text-ink/66">
+                  <p className="text-sm leading-7 text-white/66">
                     Started {formatTimestamp(round.createdAt)}
                     {round.completedAt
                       ? ` • Closed ${formatTimestamp(round.completedAt)}`
                       : ""}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-3">
                     <Link href={roundPath(round.slug)} className="ink-button">
                       Open round
                     </Link>

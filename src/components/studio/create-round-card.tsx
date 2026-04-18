@@ -51,29 +51,29 @@ export function CreateRoundCard({
   }
 
   return (
-    <section className="ink-panel p-6 sm:p-8">
+    <section className="ink-panel orbital-panel p-6 sm:p-8">
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">
+        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-white/56">
           Start a round
         </p>
         <h2 className="font-display text-4xl leading-none text-ink sm:text-5xl">
           Start the first node.
         </h2>
-        <p className="max-w-xl text-sm leading-6 text-ink/68">
-          You become the root, generate links, and watch the round stay open
-          until a valid loop closes it.
+        <p className="max-w-xl text-sm leading-7 text-white/72">
+          You become the root, launch the first invite, and watch the graph stay
+          in suspense until the real loop lands.
         </p>
       </div>
       <form onSubmit={handleCreateRound} className="mt-6 flex flex-col gap-4 md:flex-row">
         <label className="flex-1 space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-ink/52">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
             Your display name
           </span>
           <input
             type="text"
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
-            className="w-full rounded-[1.35rem] border border-black/10 bg-white/80 px-4 py-3 text-base text-ink outline-none transition focus:border-accent focus:bg-white"
+            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12"
             required
             minLength={2}
             maxLength={24}

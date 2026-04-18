@@ -76,14 +76,17 @@ export function SignInPanel({
   }
 
   return (
-    <div className={`ink-panel ${compact ? "p-5" : "p-6 sm:p-8"}`}>
+    <div className={`ink-panel orbital-panel ${compact ? "p-5" : "p-6 sm:p-8"}`}>
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-ink">{title}</h2>
-        <p className="max-w-md text-sm leading-6 text-ink/68">{subtitle}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
+          Email sign-in
+        </p>
+        <h2 className="font-display text-4xl leading-none text-ink">{title}</h2>
+        <p className="max-w-md text-sm leading-7 text-white/72">{subtitle}</p>
       </div>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
         <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-ink/52">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
             Email
           </span>
           <input
@@ -93,7 +96,7 @@ export function SignInPanel({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-[1.35rem] border border-black/10 bg-white/80 px-4 py-3 text-base text-ink outline-none transition focus:border-accent focus:bg-white"
+            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition placeholder:text-white/34 focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12"
             required
           />
         </label>
@@ -106,7 +109,7 @@ export function SignInPanel({
         </button>
       </form>
       {message ? (
-        <p className="mt-4 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-ink">
+        <p className="mt-4 rounded-2xl border border-[rgba(255,209,102,0.32)] bg-[rgba(255,209,102,0.14)] px-4 py-3 text-sm text-ink">
           {message}
         </p>
       ) : null}
