@@ -28,11 +28,16 @@ Copy `.env.example` to `.env.local` and fill in:
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=
 RESEND_API_KEY=
 RESEND_FROM_EMAIL=friend-graph@example.com
 ```
+
+Set exactly one public Supabase browser key for a given environment: either
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+That key must belong to the same Supabase project as `NEXT_PUBLIC_SUPABASE_URL`.
 
 ## Setup
 
@@ -53,6 +58,24 @@ npm run db:push
 ```bash
 npm run dev
 ```
+
+## Vercel production setup
+
+In Vercel, Production must include:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://find.phunnysunny.com
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=... # or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+DATABASE_URL=...
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=...
+```
+
+If the deployed sign-in form shows `Invalid API key`, the public Supabase key in
+Vercel usually does not match `NEXT_PUBLIC_SUPABASE_URL`, or the wrong key type
+was pasted for that Supabase project.
 
 ## Commands
 

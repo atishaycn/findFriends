@@ -11,7 +11,7 @@ export function createBrowserSupabaseClient(config: {
 }) {
   if (!config.supabaseUrl || !config.supabaseAnonKey) {
     throw new Error(
-      "Supabase public environment variables are missing. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      "Supabase public environment variables are missing. Set NEXT_PUBLIC_SUPABASE_URL and either NEXT_PUBLIC_SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.",
     );
   }
 

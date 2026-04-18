@@ -26,11 +26,13 @@
 - `npm run test`: Vitest unit coverage for core round logic.
 - `npm run build`: production build verification.
 - `npm run db:push`: apply `supabase/schema.sql` to the configured database.
+- Vercel Production must define `NEXT_PUBLIC_SUPABASE_URL` plus one matching public browser key: `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
 ## Working Rules
 - Preserve the round invariant: a round is a tree plus one valid closing edge.
 - Direct returns to the inviter's parent are warnings, not loops.
 - Do not expose private emails in the UI or graph payloads.
 - Keep pages server-first and push interactivity into focused client components.
+- Treat Supabase browser auth config as valid when the URL is set and either supported public key is present.
 - Every commit that changes shipped behavior must include verification, push to the tracked remote, and confirm the resulting Vercel deployment for `https://find.phunnysunny.com/`.
 - When behavior or workflow changes materially, update this brief in the same change.

@@ -1,14 +1,11 @@
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { maybeEnv } from "@/lib/env";
+import { hasSupabaseClientEnv } from "@/lib/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { homePath } from "@/lib/routes";
 
 export async function getCurrentUser() {
-  if (
-    !maybeEnv("NEXT_PUBLIC_SUPABASE_URL") ||
-    !maybeEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-  ) {
+  if (!hasSupabaseClientEnv()) {
     return null;
   }
 
