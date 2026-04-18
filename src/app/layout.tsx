@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Space_Grotesk } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
-const displayFont = Cormorant_Garamond({
+const displayFont = Manrope({
   variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+});
+
+const bodyFont = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const bodyFont = Space_Grotesk({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "Friend Graph",
+  title: "Loop",
   description:
-    "A sketchbook-style friend graph that grows through shared links and reveals the final network when the loop closes.",
+    "Start a social chain reaction, pass the link forward, and unlock the full map when the loop closes.",
 };
 
 export default function RootLayout({

@@ -5,6 +5,7 @@ export type ConnectionKind = "tree" | "closing_loop";
 export interface RoundSummary {
   slug: string;
   status: RoundStatus;
+  prompt: string | null;
   createdAt: string;
   completedAt: string | null;
   myDisplayName: string;
@@ -27,6 +28,7 @@ export interface WorkspaceInvite {
 export interface RoundWorkspaceData {
   slug: string;
   status: RoundStatus;
+  prompt: string | null;
   createdAt: string;
   completedAt: string | null;
   isStarter: boolean;
@@ -48,6 +50,7 @@ export interface InvitePreview {
   inviteStatus: InviteStatus;
   roundStatus: RoundStatus;
   roundSlug: string;
+  prompt: string | null;
   inviterDisplayName: string;
   viewerParticipantId: string | null;
   viewerDisplayName: string | null;
@@ -71,7 +74,11 @@ export interface GraphEdge {
 
 export interface FinalGraphData {
   slug: string;
+  prompt: string | null;
   completedAt: string;
+  startedAt: string;
+  starterDisplayName: string;
+  closerDisplayName: string | null;
   nodes: GraphNode[];
   edges: GraphEdge[];
 }

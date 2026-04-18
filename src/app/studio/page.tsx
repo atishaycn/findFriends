@@ -23,40 +23,39 @@ export default async function StudioPage() {
   const activeRounds = rounds.filter((round) => round.status === "active").length;
 
   return (
-    <main className="paper-grid min-h-screen">
+    <main className="loop-shell min-h-screen pb-28">
       <SiteHeader userEmail={user.email} />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 sm:py-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 sm:py-10">
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/54">
-              Studio
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
+              Dashboard
             </p>
-            <h1 className="font-display text-5xl leading-[0.92] text-ink sm:text-6xl lg:text-7xl">
-              Keep your rounds playful, not chaotic.
+            <h1 className="font-display text-5xl font-extrabold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
+              Your Loops
             </h1>
-            <p className="max-w-2xl text-base leading-8 text-white/70">
-              Start a fresh chain, track the ones you already touched, and jump to
-              the final graph as soon as one closes.
+            <p className="max-w-2xl text-base leading-8 text-slate-600">
+              Active chains stay mysterious. Closed ones unlock the full social map.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="ink-panel p-5">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
-                Total rounds
+            <div className="loop-card p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Total loops
               </p>
-              <p className="mt-3 text-4xl font-semibold text-ink">{rounds.length}</p>
+              <p className="mt-3 text-4xl font-semibold text-slate-950">{rounds.length}</p>
             </div>
-            <div className="ink-panel p-5">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
+            <div className="loop-card p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
                 Active now
               </p>
-              <p className="mt-3 text-4xl font-semibold text-ink">{activeRounds}</p>
+              <p className="mt-3 text-4xl font-semibold text-slate-950">{activeRounds}</p>
             </div>
-            <div className="ink-panel p-5">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/46">
+            <div className="loop-card p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
                 Signed in as
               </p>
-              <p className="mt-3 break-all text-sm leading-6 text-white/74">
+              <p className="mt-3 break-all text-sm leading-6 text-slate-600">
                 {user.email}
               </p>
             </div>
@@ -68,80 +67,84 @@ export default async function StudioPage() {
         <section className="space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-                Your rounds
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Active and revealed
               </p>
-              <h2 className="mt-2 font-display text-5xl leading-none text-ink">
-                Pick the thread you want to keep alive.
+              <h2 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
+                Pick the Loop you want to open.
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-7 text-white/66">
-              Active rounds only expose your own outbound links. Completed ones
-              unlock the full network and the final reveal.
+            <p className="max-w-md text-sm leading-7 text-slate-600">
+              Active Loops show the mystery. Revealed ones give you the map.
             </p>
           </div>
 
           {rounds.length === 0 ? (
-            <div className="ink-panel orbital-panel p-8">
-              <p className="max-w-xl text-sm leading-7 text-white/72">
-                Nothing is in motion yet. Create a round above and start the first
-                pass.
+            <div className="loop-card p-8">
+              <p className="max-w-xl text-sm leading-7 text-slate-600">
+                Nothing is moving yet. Start a Loop and send the first handoff.
               </p>
             </div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-2">
               {rounds.map((round) => (
-                <article
-                  key={round.slug}
-                  className="ink-panel orbital-panel flex flex-col gap-5 p-6"
-                >
+                <article key={round.slug} className="loop-card flex flex-col gap-5 p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/52">
-                        Round {round.slug}
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                        Loop {round.slug}
                       </p>
-                      <h3 className="mt-2 font-display text-4xl leading-none text-ink">
-                        {round.myDisplayName}
+                      <h3 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-slate-950">
+                        {round.prompt ?? "Untitled Loop"}
                       </h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">
+                        Started by {round.myDisplayName}
+                      </p>
                     </div>
-                    <span className="status-pill">
-                      {round.status === "completed" ? "Complete" : "Active"}
+                    <span
+                      className={`loop-status ${
+                        round.status === "completed"
+                          ? "loop-status-complete"
+                          : "loop-status-active"
+                      }`}
+                    >
+                      {round.status === "completed" ? "Revealed" : "Active"}
                     </span>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/46">
-                        Friends
+                    <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        Chain size
                       </p>
-                      <p className="mt-2 text-3xl font-semibold text-ink">
+                      <p className="mt-2 text-3xl font-semibold text-slate-950">
                         {round.totalParticipants}
                       </p>
                     </div>
-                    <div className="rounded-[1.4rem] border border-white/10 bg-white/6 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/46">
-                        Invites sent
+                    <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        Links sent
                       </p>
-                      <p className="mt-2 text-3xl font-semibold text-ink">
+                      <p className="mt-2 text-3xl font-semibold text-slate-950">
                         {round.invitesSent}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm leading-7 text-white/66">
+                  <p className="text-sm leading-7 text-slate-600">
                     Started {formatTimestamp(round.createdAt)}
                     {round.completedAt
                       ? ` • Closed ${formatTimestamp(round.completedAt)}`
                       : ""}
                   </p>
                   <div className="flex flex-wrap gap-3">
-                    <Link href={roundPath(round.slug)} className="ink-button">
-                      Open round
+                    <Link href={roundPath(round.slug)} className="loop-button">
+                      {round.status === "completed" ? "Open Loop" : "Keep it moving"}
                     </Link>
                     {round.status === "completed" ? (
                       <Link
                         href={roundGraphPath(round.slug)}
-                        className="ink-button-secondary"
+                        className="loop-button-secondary"
                       >
-                        Final graph
+                        View Map
                       </Link>
                     ) : null}
                   </div>

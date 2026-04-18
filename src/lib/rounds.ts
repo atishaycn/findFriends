@@ -30,6 +30,7 @@ const displayNameSchema = z
 
 export const createRoundSchema = z.object({
   displayName: displayNameSchema,
+  prompt: z.string().trim().min(3).max(120),
 });
 
 export const createInviteSchema = z.object({
@@ -43,6 +44,7 @@ export const claimInviteSchema = z.object({
 type RoundRow = {
   id: string;
   slug: string;
+  prompt: string | null;
   status: "active" | "completed";
   completed_at: string | null;
   created_at: string;
@@ -55,6 +57,7 @@ type ParticipantRow = {
 
 type RoundSummaryRow = {
   slug: string;
+  prompt: string | null;
   status: "active" | "completed";
   completed_at: string | null;
   created_at: string;
@@ -66,6 +69,7 @@ type RoundSummaryRow = {
 type WorkspaceRow = {
   round_id: string;
   slug: string;
+  prompt: string | null;
   status: "active" | "completed";
   completed_at: string | null;
   created_at: string;
@@ -92,6 +96,7 @@ type InviteContextRow = {
   invite_status: "pending" | "claimed" | "blocked_return" | "locked";
   round_id: string;
   round_slug: string;
+  round_prompt: string | null;
   round_status: "active" | "completed";
   inviter_participant_id: string;
   inviter_display_name: string;
@@ -138,8 +143,11 @@ function assertEmail(user: User) {
   return user.email;
 }
 
-export async function createRoundForUser(user: User, input: { displayName: string }) {
-  const { displayName } = createRoundSchema.parse(input);
+export async function createRoundForUser(
+  user: User,
+  input: { displayName: string; prompt: string },
+) {
+  const { displayName, prompt } = createRoundSchema.parse(input);
   const email = assertEmail(user);
   const db = getDb();
 
@@ -149,9 +157,9 @@ export async function createRoundForUser(user: User, input: { displayName: strin
     try {
       return await db.begin(async (tx) => {
         const [round] = await tx<RoundRow[]>`
-          insert into rounds (slug)
-          values (${slug})
-          returning id, slug, status, completed_at, created_at
+          insert into rounds (slug, prompt)
+          values (${slug}, ${prompt})
+          returning id, slug, prompt, status, completed_at, created_at
         `;
 
         const [starter] = await tx<ParticipantRow[]>`
@@ -188,6 +196,7 @@ export async function listUserRounds(userId: string, baseUrl = getBaseUrl()) {
   const rows = await db<RoundSummaryRow[]>`
     select
       r.slug,
+      r.prompt,
       r.status,
       r.completed_at,
       r.created_at,
@@ -211,6 +220,7 @@ export async function listUserRounds(userId: string, baseUrl = getBaseUrl()) {
   return rows.map<RoundSummary>((row) => ({
     slug: row.slug,
     status: row.status,
+    prompt: row.prompt,
     createdAt: row.created_at,
     completedAt: row.completed_at,
     myDisplayName: row.my_display_name,
@@ -231,6 +241,7 @@ export async function getRoundWorkspace(
     select
       r.id as round_id,
       r.slug,
+      r.prompt,
       r.status,
       r.completed_at,
       r.created_at,
@@ -282,6 +293,7 @@ export async function getRoundWorkspace(
   return {
     slug: workspace.slug,
     status: workspace.status,
+    prompt: workspace.prompt,
     createdAt: workspace.created_at,
     completedAt: workspace.completed_at,
     isStarter: workspace.starter_participant_id === workspace.participant_id,
@@ -311,6 +323,7 @@ export async function getInvitePreview(
       invite_status: "pending" | "claimed" | "blocked_return" | "locked";
       round_status: "active" | "completed";
       round_slug: string;
+      round_prompt: string | null;
       inviter_display_name: string;
       viewer_participant_id: string | null;
       viewer_display_name: string | null;
@@ -321,6 +334,7 @@ export async function getInvitePreview(
       i.status as invite_status,
       r.status as round_status,
       r.slug as round_slug,
+      r.prompt as round_prompt,
       inviter.display_name as inviter_display_name,
       viewer.id as viewer_participant_id,
       viewer.display_name as viewer_display_name
@@ -345,6 +359,7 @@ export async function getInvitePreview(
     inviteStatus: invite.invite_status,
     roundStatus: invite.round_status,
     roundSlug: invite.round_slug,
+    prompt: invite.round_prompt,
     inviterDisplayName: invite.inviter_display_name,
     viewerParticipantId: invite.viewer_participant_id,
     viewerDisplayName: invite.viewer_display_name,
@@ -403,7 +418,7 @@ export async function createInviteForUser(
 
       return {
         invite: buildWorkspaceInvite(baseUrl, invite),
-        shareMessage: `Join my friend graph and claim your spot: ${shareUrl}`,
+        shareMessage: `You’re in my Loop. Join here and pass it on: ${shareUrl}`,
       };
     } catch (error) {
       if (isUniqueViolation(error, "invites_token_key")) {
@@ -433,6 +448,7 @@ export async function claimInviteForUser(
         i.status as invite_status,
         i.round_id,
         r.slug as round_slug,
+        r.prompt as round_prompt,
         r.status as round_status,
         inviter.id as inviter_participant_id,
         inviter.display_name as inviter_display_name,
@@ -668,14 +684,25 @@ export async function getFinalGraph(
     Array<{
       round_id: string;
       completed_at: string | null;
+      created_at: string;
+      prompt: string | null;
       status: "active" | "completed";
+      starter_display_name: string | null;
+      closer_display_name: string | null;
     }>
   >`
     select
       r.id as round_id,
       r.completed_at,
-      r.status
+      r.created_at,
+      r.prompt,
+      r.status,
+      starter.display_name as starter_display_name,
+      closer.display_name as closer_display_name
     from rounds r
+    left join participants starter on starter.id = r.starter_participant_id
+    left join connections completion on completion.id = r.completion_connection_id
+    left join participants closer on closer.id = completion.from_participant_id
     join participants p on p.round_id = r.id
     where r.slug = ${slug}
       and p.auth_user_id = ${userId}::uuid
@@ -717,7 +744,11 @@ export async function getFinalGraph(
 
   return {
     slug,
+    prompt: roundAccess.prompt,
     completedAt: roundAccess.completed_at,
+    startedAt: roundAccess.created_at,
+    starterDisplayName: roundAccess.starter_display_name ?? "Unknown",
+    closerDisplayName: roundAccess.closer_display_name,
     nodes: nodes.map((node) => ({
       id: node.id,
       label: node.display_name,

@@ -34,6 +34,7 @@ $$;
 create table if not exists rounds (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
+  prompt text,
   starter_participant_id uuid,
   status round_status not null default 'active',
   completed_at timestamptz,
@@ -85,6 +86,14 @@ create index if not exists invites_round_inviter_idx
 
 create index if not exists connections_round_idx
   on connections (round_id, created_at asc);
+
+do $$
+begin
+  alter table rounds
+    add column prompt text;
+exception
+  when duplicate_column then null;
+end $$;
 
 do $$
 begin

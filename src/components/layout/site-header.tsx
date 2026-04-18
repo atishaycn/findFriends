@@ -8,38 +8,38 @@ export function SiteHeader({
   userEmail?: string | null;
 }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-[color:rgba(7,11,22,0.62)] backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/88 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <Link
           href={homePath()}
-          className="font-display text-3xl tracking-[0.08em] text-ink sm:text-4xl"
+          className="font-display text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl"
         >
-          findFriends
+          Loop
         </Link>
-        <div className="flex items-center gap-3 text-sm text-ink/72">
+        <div className="flex items-center gap-3 text-sm text-slate-600">
           {userEmail ? (
             <>
               <Link
                 href={studioPath()}
-                className="rounded-full border border-white/12 px-4 py-2 transition hover:border-white/25 hover:bg-white/10"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
               >
-                Studio
+                Your Loops
               </Link>
-              <span className="hidden rounded-full border border-white/12 bg-white/6 px-4 py-2 md:inline-flex">
+              <span className="hidden rounded-full border border-slate-200 bg-slate-50 px-4 py-2 md:inline-flex">
                 {userEmail}
               </span>
               <form action={signOutAction}>
                 <button
                   type="submit"
-                  className="rounded-full bg-white/92 px-4 py-2 text-[#10131d] transition hover:bg-white"
+                  className="rounded-full bg-slate-950 px-4 py-2 text-white transition hover:bg-slate-800"
                 >
                   Sign out
                 </button>
               </form>
             </>
           ) : (
-            <span className="rounded-full border border-white/12 bg-white/6 px-4 py-2">
-              Email sign in
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
+              Magic link sign in
             </span>
           )}
         </div>

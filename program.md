@@ -1,7 +1,7 @@
-# Friend Graph Operating Brief
+# Loop Operating Brief
 
 ## Purpose
-- Build and ship a mobile-first web app where friends pass invite links through chat, grow a round-specific graph, and unlock the full connection map when a valid loop closes the round.
+- Build and ship a mobile-first web app called `Loop` where friends pass invite links through chat, keep the chain hidden while it grows, and unlock the full connection map when a valid loop closes.
 
 ## Stack And Boundaries
 - Frontend: Next.js App Router with TypeScript and Tailwind v4.
@@ -15,6 +15,9 @@
 - `src/app/`: pages, layouts, route handlers.
 - `src/lib/`: auth, database, validation, query, email, and route helpers.
 - `src/components/`: client and server UI building blocks.
+- `src/components/graph/friend-graph-canvas.tsx`: interactive D3 reveal map with zoom, pan, drag, and highlighted closing edge.
+- `src/components/round/invite-claim-card.tsx`: invite accept flow and post-accept handoff state.
+- `src/components/studio/create-round-card.tsx`: floating create action and prompt-first modal.
 - `supabase/config.toml`: local/self-hosted Supabase auth config, including branded auth email subjects.
 - `supabase/schema.sql`: canonical database schema for rounds, participants, invites, and connections.
 - `supabase/templates/`: Supabase auth email HTML templates.
@@ -32,6 +35,7 @@
 - Preserve the round invariant: a round is a tree plus one valid closing edge.
 - Direct returns to the inviter's parent are warnings, not loops.
 - Do not expose private emails in the UI or graph payloads.
+- Treat `rounds.prompt` as the user-facing Loop title/rule in the UI.
 - Keep pages server-first and push interactivity into focused client components.
 - Treat Supabase browser auth config as valid when the URL is set and either supported public key is present.
 - Every commit that changes shipped behavior must include verification, push to the tracked remote, and confirm the resulting Vercel deployment for `https://find.phunnysunny.com/`.

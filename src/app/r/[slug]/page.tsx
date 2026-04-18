@@ -15,9 +15,9 @@ export default async function RoundPage(props: PageProps<"/r/[slug]">) {
   }
 
   return (
-    <main className="paper-grid min-h-screen">
+    <main className="loop-shell min-h-screen">
       <SiteHeader userEmail={user.email} />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-10 sm:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-10 sm:px-8">
         <RoundWorkspace initialData={workspace} />
       </div>
     </main>

@@ -35,58 +35,85 @@ export function InviteClaimCard({
     href: string;
     action: string;
   } | null>(null);
+  const [acceptedInvite, setAcceptedInvite] = useState<{
+    roundSlug: string;
+    shareUrl: string;
+    shareMessage: string;
+  } | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   if (!isAuthenticated) {
     if (preview.roundStatus === "completed" && !preview.viewerParticipantId) {
       return (
-        <div className="ink-panel orbital-panel p-6 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-            Round closed
+        <div className="loop-card w-full p-6 sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            Loop closed
           </p>
-          <h2 className="mt-2 text-3xl font-semibold text-ink">
-            This graph already completed.
+          <h2 className="mt-2 text-3xl font-semibold text-slate-950">
+            This Loop already closed.
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-7 text-white/72">
-            The valid loop has already been found, so this invite no longer accepts a
-            new participant.
+          <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600">
+            The chain already found its way back. This invite can’t add anyone new.
           </p>
         </div>
       );
     }
 
     return (
-      <div className="space-y-5">
-        <div className="invite-crown overflow-hidden rounded-[2rem] px-6 py-7 sm:px-8 sm:py-9">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/72">
+      <div className="mx-auto grid w-full max-w-4xl gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="invite-hero overflow-hidden rounded-[2rem] px-6 py-8 sm:px-8 sm:py-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-indigo-100">
             Live invite
           </p>
-          <h2 className="mt-3 font-display text-6xl leading-[0.86] text-white sm:text-7xl">
-            You&apos;re it
-          </h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-white/82">
-            {preview.inviterDisplayName} passed the chain to you. Claim your spot,
-            then tag the next person before the loop closes somewhere else.
+          <h1 className="mt-3 font-display text-5xl font-extrabold leading-[0.92] text-white sm:text-6xl">
+            {preview.inviterDisplayName} passed you a Loop.
+          </h1>
+          <p className="mt-4 max-w-xl text-base leading-8 text-indigo-50/92">
+            Join to see how far it goes. You won’t see the chain yet, only the chance to keep it moving.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/72">
-            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
-              Claim this node
-            </span>
-            <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2">
-              Tag next person
-            </span>
-          </div>
+          {preview.prompt ? (
+            <div className="mt-6 rounded-[1.5rem] border border-white/20 bg-white/10 p-4 text-sm leading-7 text-white">
+              “{preview.prompt}”
+            </div>
+          ) : null}
         </div>
         <SignInPanel
           nextPath={invitePath(preview.token)}
-          title="Sign in to keep it moving"
-          subtitle={`This invite came from ${preview.inviterDisplayName}. Open the sign-in link on this device, claim your node, and send the next invite forward.`}
+          title="Accept to reveal your link"
+          subtitle={`This Loop came from ${preview.inviterDisplayName}. Sign in on this device to accept it.`}
           siteUrl={siteUrl}
           supabaseUrl={supabaseUrl}
           supabaseAnonKey={supabaseAnonKey}
         />
       </div>
     );
+  }
+
+  async function copyLink(value: string) {
+    await navigator.clipboard.writeText(value);
+    setNotice({
+      title: "Link copied",
+      body: "Send it to one person and keep the Loop moving.",
+      href: roundPath(acceptedInvite?.roundSlug ?? preview.roundSlug),
+      action: "Open Loop",
+    });
+  }
+
+  async function shareAcceptedInvite() {
+    if (!acceptedInvite) {
+      return;
+    }
+
+    if (navigator.share) {
+      await navigator.share({
+        title: "Join my Loop",
+        text: acceptedInvite.shareMessage,
+        url: acceptedInvite.shareUrl,
+      });
+      return;
+    }
+
+    await copyLink(acceptedInvite.shareUrl);
   }
 
   async function handleClaim(event: React.FormEvent<HTMLFormElement>) {
@@ -115,8 +142,26 @@ export function InviteClaimCard({
       }
 
       if (payload.type === "joined") {
-        startTransition(() => {
-          router.push(roundPath(payload.roundSlug));
+        const inviteResponse = await fetch("/api/invites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            roundSlug: payload.roundSlug,
+          }),
+        });
+
+        const invitePayload = await inviteResponse.json();
+
+        if (!inviteResponse.ok) {
+          throw new Error(invitePayload.error ?? "Could not generate the next invite.");
+        }
+
+        setAcceptedInvite({
+          roundSlug: payload.roundSlug,
+          shareUrl: invitePayload.invite.shareUrl,
+          shareMessage: invitePayload.shareMessage,
         });
         return;
       }
@@ -137,8 +182,8 @@ export function InviteClaimCard({
         }
 
         setNotice({
-          title: "That round already closed",
-          body: "The graph finished before this invite was claimed.",
+          title: "That Loop already closed",
+          body: "The map unlocked before this invite was claimed.",
           href: "/",
           action: "Back home",
         });
@@ -148,9 +193,9 @@ export function InviteClaimCard({
       if (payload.type === "self_claim") {
         setNotice({
           title: "You already own this link",
-          body: "That invite belongs to your current node. Send it to another friend instead.",
+          body: "That invite belongs to your current node. Send it to someone else instead.",
           href: roundPath(payload.roundSlug),
-          action: "Open my round",
+          action: "Open my Loop",
         });
         return;
       }
@@ -159,7 +204,7 @@ export function InviteClaimCard({
         title: "That link came straight back",
         body: `${payload.inviterDisplayName} sent the link back to an earlier node, so it does not count as a closing loop. Send a fresh link to someone else.`,
         href: roundPath(payload.roundSlug),
-        action: "Back to my round",
+        action: "Back to my Loop",
       });
     } catch (claimError) {
       setError(
@@ -174,44 +219,91 @@ export function InviteClaimCard({
 
   if (preview.roundStatus === "completed" && preview.viewerParticipantId) {
     return (
-      <div className="ink-panel orbital-panel p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Final graph
+      <div className="loop-card w-full p-6 sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          Final map
         </p>
-        <h2 className="mt-2 text-3xl font-semibold text-ink">
-          This round is already complete.
+        <h2 className="mt-2 text-3xl font-semibold text-slate-950">
+          This Loop is already revealed.
         </h2>
-        <p className="mt-3 text-sm leading-7 text-white/72">
-          You are already part of it. Open the finished graph to see every connection.
+        <p className="mt-3 text-sm leading-7 text-slate-600">
+          You’re already inside it. Open the map to see every connection.
         </p>
-        <Link href={roundGraphPath(preview.roundSlug)} className="ink-button mt-6 inline-flex">
-          Open final graph
+        <Link href={roundGraphPath(preview.roundSlug)} className="loop-button mt-6 inline-flex">
+          View Map
         </Link>
       </div>
     );
   }
 
-  return (
-    <div className="ink-panel orbital-panel p-6 sm:p-8">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Claim invite
+  if (acceptedInvite) {
+    return (
+      <div className="loop-card mx-auto w-full max-w-2xl p-6 sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          You&apos;re in
         </p>
-        <h2 className="text-3xl font-semibold text-ink">
-          {preview.inviterDisplayName} sent you a live link.
+        <h2 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-slate-950">
+          Now, keep it moving.
         </h2>
-        <p className="max-w-xl text-sm leading-7 text-white/72">
-          Use your display name for this round. If you already belong to the graph,
-          claiming this link may either warn you about a direct return or close the
-          full loop.
+        <p className="mt-3 text-sm leading-7 text-slate-600">
+          Pass your unique forwarding link to one person. The rest stays hidden until the Loop closes.
         </p>
+        <div className="mt-5 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
+          <p className="break-all text-sm leading-7 text-slate-700">
+            {acceptedInvite.shareUrl}
+          </p>
+        </div>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => void copyLink(acceptedInvite.shareUrl)}
+            className="loop-button"
+          >
+            Copy Link
+          </button>
+          <button
+            type="button"
+            onClick={() => void shareAcceptedInvite()}
+            className="loop-button-secondary"
+          >
+            Share via...
+          </button>
+          <button
+            type="button"
+            onClick={() => startTransition(() => router.push(roundPath(acceptedInvite.roundSlug)))}
+            className="loop-button-secondary"
+          >
+            Open Loop
+          </button>
+        </div>
       </div>
-      <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/7 p-4 text-sm text-white/72">
-        Signed in as <span className="font-semibold text-ink">{userEmail}</span>
+    );
+  }
+
+  return (
+    <div className="loop-card mx-auto w-full max-w-2xl p-6 sm:p-8">
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          Accept this Loop
+        </p>
+        <h2 className="text-3xl font-semibold text-slate-950">
+          {preview.inviterDisplayName} invited you in.
+        </h2>
+        <p className="max-w-xl text-sm leading-7 text-slate-600">
+          Accept this handoff, then you’ll get a unique link to pass forward.
+        </p>
+        {preview.prompt ? (
+          <div className="rounded-[1.5rem] border border-indigo-100 bg-indigo-50 p-4 text-sm leading-7 text-indigo-950">
+            Prompt: “{preview.prompt}”
+          </div>
+        ) : null}
+      </div>
+      <div className="mt-5 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+        Signed in as <span className="font-semibold text-slate-950">{userEmail}</span>
       </div>
       <form onSubmit={handleClaim} className="mt-6 space-y-4">
         <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
             Display name
           </span>
           <input
@@ -219,7 +311,7 @@ export function InviteClaimCard({
             value={displayName}
             onChange={(event) => setDisplayName(event.target.value)}
             readOnly={Boolean(preview.viewerParticipantId)}
-            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12 read-only:bg-white/5"
+            className="w-full rounded-[1.35rem] border border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 read-only:bg-slate-50"
             required={!preview.viewerParticipantId}
             minLength={2}
             maxLength={24}
@@ -228,16 +320,16 @@ export function InviteClaimCard({
         <button
           type="submit"
           disabled={isPending}
-          className="ink-button w-full disabled:cursor-not-allowed disabled:opacity-55"
+          className="loop-button w-full disabled:cursor-not-allowed disabled:opacity-55"
         >
-          {isPending ? "Claiming..." : "Claim this node"}
+          {isPending ? "Accepting..." : "Accept & Reveal Link"}
         </button>
       </form>
       {notice ? (
-        <div className="mt-5 rounded-[1.6rem] border border-[rgba(255,141,93,0.3)] bg-[rgba(255,141,93,0.12)] p-5">
-          <h3 className="text-lg font-semibold text-ink">{notice.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-white/76">{notice.body}</p>
-          <Link href={notice.href} className="ink-button mt-4 inline-flex">
+        <div className="mt-5 rounded-[1.6rem] border border-indigo-200 bg-indigo-50 p-5">
+          <h3 className="text-lg font-semibold text-slate-950">{notice.title}</h3>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{notice.body}</p>
+          <Link href={notice.href} className="loop-button mt-4 inline-flex">
             {notice.action}
           </Link>
         </div>

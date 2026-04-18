@@ -1,14 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #0a1020;
-  --paper-deep: #070b16;
-  --ink: #f4f0e8;
-  --muted: #b0b9d3;
-  --accent: #ff8d5d;
-  --accent-strong: #ffd166;
-  --violet: #8a7dff;
-  --line: rgba(255, 255, 255, 0.12);
+  --paper: #f8fafc;
+  --paper-deep: #eef2ff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --accent: #4f46e5;
+  --accent-strong: #6366f1;
+  --line: rgba(15, 23, 42, 0.08);
 }
 
 @theme inline {
@@ -25,16 +24,15 @@
 }
 
 html {
-  background: var(--paper-deep);
+  background: var(--paper);
 }
 
 body {
   min-height: 100%;
   background:
-    radial-gradient(circle at 15% 20%, rgba(138, 125, 255, 0.24), transparent 26%),
-    radial-gradient(circle at 85% 0%, rgba(255, 141, 93, 0.22), transparent 28%),
-    radial-gradient(circle at 50% 100%, rgba(255, 209, 102, 0.14), transparent 34%),
-    linear-gradient(180deg, #101935 0%, #0a1020 54%, #070b16 100%);
+    radial-gradient(circle at 10% 16%, rgba(99, 102, 241, 0.12), transparent 24%),
+    radial-gradient(circle at 90% 8%, rgba(129, 140, 248, 0.16), transparent 20%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   color: var(--ink);
   font-family: var(--font-sans), sans-serif;
 }
@@ -51,203 +49,198 @@ input {
     opacity 180ms ease;
 }
 
-.paper-grid {
+.loop-shell {
   position: relative;
   overflow: hidden;
   isolation: isolate;
 }
 
-.paper-grid::before {
+.loop-shell::before {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 72px 72px;
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+  background-size: 84px 84px;
   mask-image: radial-gradient(circle at center, black 55%, transparent 100%);
-  opacity: 0.34;
+  opacity: 0.5;
   pointer-events: none;
   animation: drift-grid 18s linear infinite;
 }
 
-.paper-grid::after {
+.loop-shell::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px),
-    radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.1) 0 1.5px, transparent 1.5px),
-    radial-gradient(circle at 42% 72%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px);
+    radial-gradient(circle at 18% 14%, rgba(79, 70, 229, 0.1) 0 2px, transparent 2px),
+    radial-gradient(circle at 72% 30%, rgba(15, 23, 42, 0.08) 0 1.5px, transparent 1.5px),
+    radial-gradient(circle at 42% 72%, rgba(99, 102, 241, 0.08) 0 1px, transparent 1px);
   background-size: 220px 220px, 280px 280px, 180px 180px;
-  opacity: 0.5;
+  opacity: 0.7;
   pointer-events: none;
 }
 
-.ink-panel {
+.loop-card {
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07)),
-    rgba(7, 11, 22, 0.54);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(255, 255, 255, 0.82);
   border-radius: 2rem;
-  box-shadow:
-    0 22px 52px rgba(2, 6, 18, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
 }
 
-.orbital-panel {
+.invite-hero {
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.18), transparent 20%),
+    radial-gradient(circle at 82% 22%, rgba(165, 180, 252, 0.32), transparent 28%),
+    linear-gradient(145deg, #312e81 0%, #4338ca 52%, #818cf8 100%);
+  box-shadow: 0 28px 60px rgba(49, 46, 129, 0.24);
+}
+
+.hero-loop {
+  position: relative;
+  min-height: 32rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background:
+    radial-gradient(circle at center, rgba(99, 102, 241, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(238, 242, 255, 0.82));
   overflow: hidden;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
 }
 
-.orbital-panel::before {
-  content: "";
-  position: absolute;
-  inset: -30% auto auto -10%;
-  width: 220px;
-  height: 220px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(255, 209, 102, 0.22), transparent 70%);
-  pointer-events: none;
-}
-
-.invite-crown {
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 209, 102, 0.26), transparent 26%),
-    radial-gradient(circle at 82% 22%, rgba(138, 125, 255, 0.32), transparent 32%),
-    linear-gradient(140deg, #121c3f 0%, #1b2556 38%, #ff8d5d 100%);
-  box-shadow:
-    0 28px 60px rgba(3, 8, 24, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.invite-crown::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.22), transparent 22%),
-    linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.12) 48%, transparent 62%);
-  pointer-events: none;
-}
-
-.hero-orbit {
-  position: relative;
-  min-height: 28rem;
-  border-radius: 2.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background:
-    radial-gradient(circle at center, rgba(138, 125, 255, 0.22), transparent 30%),
-    radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.12), transparent 14%),
-    linear-gradient(180deg, rgba(11, 16, 34, 0.9), rgba(7, 11, 22, 0.7));
-  overflow: hidden;
-  box-shadow:
-    0 30px 70px rgba(2, 8, 24, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.hero-orbit::before,
-.hero-orbit::after {
-  content: "";
-  position: absolute;
-  inset: 50% auto auto 50%;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  transform: translate(-50%, -50%);
-}
-
-.hero-orbit::before {
-  width: 72%;
-  height: 72%;
-}
-
-.hero-orbit::after {
-  width: 44%;
-  height: 44%;
-}
-
-.ink-button {
+.loop-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--accent-strong), var(--accent));
-  color: #10131d;
+  color: white;
   padding: 0.95rem 1.45rem;
   font-weight: 700;
-  box-shadow: 0 16px 34px rgba(255, 141, 93, 0.28);
+  box-shadow: 0 16px 34px rgba(79, 70, 229, 0.22);
 }
 
-.ink-button:hover {
+.loop-button:hover {
   transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 22px 42px rgba(255, 141, 93, 0.34);
+  box-shadow: 0 22px 42px rgba(79, 70, 229, 0.3);
 }
 
-.ink-button-secondary {
+.loop-button-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(203, 213, 225, 1);
+  background: rgba(255, 255, 255, 0.86);
   color: var(--ink);
   padding: 0.95rem 1.45rem;
   font-weight: 600;
 }
 
-.ink-button-secondary:hover {
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.12);
+.loop-button-secondary:hover {
+  border-color: rgba(148, 163, 184, 1);
+  background: rgba(248, 250, 252, 1);
 }
 
-.status-pill {
+.loop-status {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(203, 213, 225, 1);
+  background: rgba(248, 250, 252, 1);
   padding: 0.55rem 0.9rem;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+  color: #334155;
 }
 
-.graph-surface {
+.loop-status-active::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.5rem;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+}
+
+.loop-status-complete {
+  border-color: rgba(165, 180, 252, 1);
+  background: rgba(238, 242, 255, 1);
+  color: #3730a3;
+}
+
+.loop-fab {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  z-index: 30;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  color: white;
+  padding: 1rem 1.4rem;
+  font-weight: 800;
+  box-shadow: 0 24px 50px rgba(79, 70, 229, 0.28);
+}
+
+.loop-visual {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: linear-gradient(180deg, rgba(79, 70, 229, 0.06), rgba(79, 70, 229, 0.01));
+  min-height: 14rem;
+}
+
+.loop-dot {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: #4f46e5;
+  box-shadow: 0 0 0 10px rgba(79, 70, 229, 0.08);
+}
+
+.loop-dot-a { left: 2.5rem; top: 5.2rem; }
+.loop-dot-b { left: 11.5rem; top: 3.4rem; }
+.loop-dot-c { right: 4rem; top: 5.5rem; }
+.loop-dot-d { right: 2.2rem; bottom: 4.6rem; }
+
+.loop-line {
+  stroke: rgba(100, 116, 139, 0.8);
+  stroke-width: 4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 10 12;
+}
+
+.loop-line-close {
+  stroke: #4f46e5;
+  stroke-width: 5;
+  animation: pulse-close 2.2s ease-in-out infinite;
+}
+
+.invite-screen {
   background:
-    radial-gradient(circle at top right, rgba(255, 209, 102, 0.12), transparent 22%),
-    rgba(255, 255, 255, 0.04);
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.2), transparent 28%),
+    linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
 }
 
-.graph-edge {
-  stroke: rgba(255, 255, 255, 0.62);
-  stroke-width: 3px;
-  stroke-dasharray: 8 10;
-  animation: draw-line 820ms ease forwards;
-}
-
-.graph-edge--completion {
-  stroke: rgba(255, 141, 93, 0.95);
-  stroke-width: 4px;
-  stroke-dasharray: 14 12;
-}
-
-.graph-node {
-  opacity: 0;
-  animation: fade-rise 620ms ease forwards;
-}
-
-.aurora-copy {
-  background: linear-gradient(135deg, #fff5d7 0%, #ffd166 45%, #ff8d5d 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.closing-edge {
+  animation: pulse-close 2.2s ease-in-out infinite;
 }
 
 @keyframes drift-grid {
@@ -255,28 +248,15 @@ input {
     transform: translateY(0);
   }
   to {
-    transform: translateY(72px);
+    transform: translateY(84px);
   }
 }
 
-@keyframes draw-line {
-  from {
-    opacity: 0;
-    stroke-dashoffset: 120;
-  }
-  to {
+@keyframes pulse-close {
+  0%, 100% {
     opacity: 1;
-    stroke-dashoffset: 0;
   }
-}
-
-@keyframes fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  50% {
+    opacity: 0.55;
   }
 }

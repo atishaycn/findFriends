@@ -96,9 +96,7 @@ export function SignInPanel({
       }
 
       startTransition(() => {
-        setMessage(
-          "Check your email for your findFriends sign-in link, then open it on this device to continue.",
-        );
+        setMessage("Magic link sent. Open it on this device to join Loop.");
         setEmail("");
       });
     } catch (submitError) {
@@ -115,17 +113,19 @@ export function SignInPanel({
   }
 
   return (
-    <div className={`ink-panel orbital-panel ${compact ? "p-5" : "p-6 sm:p-8"}`}>
+    <div className={`loop-card ${compact ? "p-5" : "p-6 sm:p-8"}`}>
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/54">
-          Email sign-in
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          Sign in
         </p>
-        <h2 className="font-display text-4xl leading-none text-ink">{title}</h2>
-        <p className="max-w-md text-sm leading-7 text-white/72">{subtitle}</p>
+        <h2 className="font-display text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+          {title}
+        </h2>
+        <p className="max-w-md text-sm leading-7 text-slate-600">{subtitle}</p>
       </div>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
         <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
             Email
           </span>
           <input
@@ -135,20 +135,20 @@ export function SignInPanel({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-3 text-base text-ink outline-none transition placeholder:text-white/34 focus:border-[rgba(255,209,102,0.58)] focus:bg-white/12"
+            className="w-full rounded-[1.35rem] border border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
             required
           />
         </label>
         <button
           type="submit"
           disabled={isPending || !isConfigured}
-          className="ink-button w-full disabled:cursor-not-allowed disabled:opacity-55"
+          className="loop-button w-full disabled:cursor-not-allowed disabled:opacity-55"
         >
-          {isPending ? "Signing in..." : "Sign in"}
+          {isPending ? "Sending..." : "Send magic link"}
         </button>
       </form>
       {message ? (
-        <p className="mt-4 rounded-2xl border border-[rgba(255,209,102,0.32)] bg-[rgba(255,209,102,0.14)] px-4 py-3 text-sm text-ink">
+        <p className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
           {message}
         </p>
       ) : null}
