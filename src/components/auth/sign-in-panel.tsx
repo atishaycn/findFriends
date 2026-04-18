@@ -32,6 +32,36 @@ export function SignInPanel({
   });
   const isConfigured = configValidation.ok;
 
+  function resolveRedirectBaseUrl() {
+    if (typeof window === "undefined") {
+      return siteUrl;
+    }
+
+    const currentOrigin = window.location.origin;
+
+    if (!siteUrl) {
+      return currentOrigin;
+    }
+
+    try {
+      const configuredUrl = new URL(siteUrl);
+      const isLocalConfiguredUrl =
+        configuredUrl.hostname === "localhost" ||
+        configuredUrl.hostname === "127.0.0.1";
+      const isLocalCurrentOrigin =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+
+      if (isLocalConfiguredUrl && !isLocalCurrentOrigin) {
+        return currentOrigin;
+      }
+    } catch {
+      return currentOrigin;
+    }
+
+    return siteUrl;
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -49,7 +79,7 @@ export function SignInPanel({
         supabaseUrl,
         supabaseAnonKey,
       });
-      const redirectBaseUrl = siteUrl ?? window.location.origin;
+      const redirectBaseUrl = resolveRedirectBaseUrl();
       const redirectTo = new URL(
         authCallbackPath(nextPath),
         redirectBaseUrl,
