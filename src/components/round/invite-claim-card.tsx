@@ -12,6 +12,7 @@ export function InviteClaimCard({
   isAuthenticated,
   userEmail,
   suggestedDisplayName,
+  siteUrl,
   supabaseUrl,
   supabaseAnonKey,
 }: {
@@ -19,6 +20,7 @@ export function InviteClaimCard({
   isAuthenticated: boolean;
   userEmail: string | null;
   suggestedDisplayName: string;
+  siteUrl?: string;
   supabaseUrl?: string;
   supabaseAnonKey?: string;
 }) {
@@ -79,6 +81,7 @@ export function InviteClaimCard({
           nextPath={invitePath(preview.token)}
           title="Sign in to keep it moving"
           subtitle={`This invite came from ${preview.inviterDisplayName}. Open the sign-in link on this device, claim your node, and send the next invite forward.`}
+          siteUrl={siteUrl}
           supabaseUrl={supabaseUrl}
           supabaseAnonKey={supabaseAnonKey}
         />

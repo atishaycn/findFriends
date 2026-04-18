@@ -51,6 +51,7 @@ export default async function InvitePage(props: PageProps<"/invite/[token]">) {
           isAuthenticated={Boolean(user)}
           userEmail={user?.email ?? null}
           suggestedDisplayName={suggestDisplayName(user?.email)}
+          siteUrl={publicEnv.siteUrl}
           supabaseUrl={publicEnv.supabaseUrl}
           supabaseAnonKey={publicEnv.supabaseAnonKey}
         />
