@@ -3,6 +3,7 @@
 import { startTransition, useState } from "react";
 import { authCallbackPath } from "@/lib/routes";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { validateSupabasePublicConfig } from "@/lib/supabase/public-config";
 
 export function SignInPanel({
   nextPath,
@@ -23,15 +24,17 @@ export function SignInPanel({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
-  const isConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+  const configValidation = validateSupabasePublicConfig({
+    supabaseUrl,
+    supabasePublicKey: supabaseAnonKey,
+  });
+  const isConfigured = configValidation.ok;
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!isConfigured) {
-      setError(
-        "Set the Supabase public environment variables before using email sign-in.",
-      );
+      setError(configValidation.message);
       return;
     }
 
@@ -67,7 +70,9 @@ export function SignInPanel({
     } catch (submitError) {
       setError(
         submitError instanceof Error
-          ? submitError.message
+          ? submitError.message === "Invalid API key"
+            ? "Supabase public config does not match. NEXT_PUBLIC_SUPABASE_URL and the public key must come from the same Supabase project."
+            : submitError.message
           : "Could not send the sign-in email.",
       );
     } finally {
