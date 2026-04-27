@@ -1,9 +1,10 @@
 import type { User } from "@supabase/supabase-js";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
+import { AppError } from "@/lib/errors";
 import { getBaseUrl } from "@/lib/env";
 import { sendCompletionEmails } from "@/lib/email";
-import { resolveExistingParticipantOutcome } from "@/lib/claim-logic";
+import { assertFinalGraphAvailable, resolveClaimDecision } from "@/lib/claim-logic";
 import { invitePath, roundGraphPath, roundPath } from "@/lib/routes";
 import type {
   ClaimInviteResult,
@@ -132,7 +133,11 @@ function buildWorkspaceInvite(baseUrl: string, row: InviteRow): WorkspaceInvite 
 
 function assertEmail(user: User) {
   if (!user.email) {
-    throw new Error("Authenticated users must have an email address.");
+    throw new AppError(
+      "Authenticated users must have an email address.",
+      400,
+      "email_required",
+    );
   }
 
   return user.email;
@@ -180,7 +185,7 @@ export async function createRoundForUser(user: User, input: { displayName: strin
     }
   }
 
-  throw new Error("Could not generate a unique round slug.");
+  throw new AppError("Could not generate a unique round slug.", 500, "round_slug_failed");
 }
 
 export async function listUserRounds(userId: string, baseUrl = getBaseUrl()) {
@@ -359,62 +364,65 @@ export async function createInviteForUser(
 ) {
   const { roundSlug } = createInviteSchema.parse(input);
   const db = getDb();
-  const [participant] = await db<
-    Array<{
-      round_id: string;
-      participant_id: string;
-      round_status: "active" | "completed";
-    }>
-  >`
-    select
-      r.id as round_id,
-      p.id as participant_id,
-      r.status as round_status
-    from rounds r
-    join participants p on p.round_id = r.id
-    where r.slug = ${roundSlug}
-      and p.auth_user_id = ${userId}::uuid
-    limit 1
-  `;
+  return db.begin(async (tx) => {
+    const [participant] = await tx<
+      Array<{
+        round_id: string;
+        participant_id: string;
+        round_status: "active" | "completed";
+      }>
+    >`
+      select
+        r.id as round_id,
+        p.id as participant_id,
+        r.status as round_status
+      from rounds r
+      join participants p on p.round_id = r.id
+      where r.slug = ${roundSlug}
+        and p.auth_user_id = ${userId}::uuid
+      limit 1
+      for update of r
+    `;
 
-  if (!participant) {
-    throw new Error("Round not found for this user.");
-  }
-
-  if (participant.round_status !== "active") {
-    throw new Error("This round is already complete.");
-  }
-
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    const token = generateInviteToken();
-
-    try {
-      const [invite] = await db<InviteRow[]>`
-        insert into invites (round_id, inviter_participant_id, token)
-        values (
-          ${participant.round_id}::uuid,
-          ${participant.participant_id}::uuid,
-          ${token}
-        )
-        returning id, token, status, created_at, claimed_at, null::text as claimed_by_display_name
-      `;
-
-      const shareUrl = absoluteUrl(baseUrl, invitePath(invite.token));
-
-      return {
-        invite: buildWorkspaceInvite(baseUrl, invite),
-        shareMessage: `Join my friend graph and claim your spot: ${shareUrl}`,
-      };
-    } catch (error) {
-      if (isUniqueViolation(error, "invites_token_key")) {
-        continue;
-      }
-
-      throw error;
+    if (!participant) {
+      throw new AppError("Round not found for this user.", 404, "round_not_found");
     }
-  }
 
-  throw new Error("Could not generate a unique invite token.");
+    if (participant.round_status !== "active") {
+      throw new AppError("This round is already complete.", 409, "round_complete");
+    }
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const token = generateInviteToken();
+
+      try {
+        const [invite] = await tx<InviteRow[]>`
+          insert into invites (round_id, inviter_participant_id, token)
+          values (
+            ${participant.round_id}::uuid,
+            ${participant.participant_id}::uuid,
+            ${token}
+          )
+          returning id, token, status, created_at, claimed_at, null::text as claimed_by_display_name
+        `;
+
+        const shareUrl = absoluteUrl(baseUrl, invitePath(invite.token));
+
+        return {
+          invite: buildWorkspaceInvite(baseUrl, invite),
+          shareMessage: `Join my friend graph and claim your spot: ${shareUrl}`,
+        };
+      } catch (error) {
+        if (isUniqueViolation(error, "invites_token_key")) {
+          continue;
+        }
+
+        throw error;
+      }
+    }
+
+    throw new AppError("Could not generate a unique invite token.", 500, "invite_token_failed");
+  });
 }
 
 export async function claimInviteForUser(
@@ -445,7 +453,7 @@ export async function claimInviteForUser(
     `;
 
     if (!invite) {
-      throw new Error("Invite not found.");
+      throw new AppError("Invite not found.", 404, "invite_not_found");
     }
 
     const [lockedRound] = await tx<RoundRow[]>`
@@ -456,27 +464,11 @@ export async function claimInviteForUser(
     `;
 
     if (!lockedRound) {
-      throw new Error("Round not found.");
-    }
-
-    if (lockedRound.status === "completed") {
-      if (invite.invite_status === "pending") {
-        await tx`
-          update invites
-          set status = 'locked'
-          where id = ${invite.invite_id}::uuid
-            and status = 'pending'
-        `;
-      }
-
-      return {
-        type: "round_already_complete",
-        roundSlug: invite.round_slug,
-      } satisfies ClaimInviteResult;
+      throw new AppError("Round not found.", 404, "round_not_found");
     }
 
     if (invite.invite_status !== "pending") {
-      throw new Error("This invite has already been used.");
+      throw new AppError("This invite has already been used.", 409, "invite_not_claimable");
     }
 
     const [existingParticipant] = await tx<
@@ -493,13 +485,43 @@ export async function claimInviteForUser(
       for update
     `;
 
-    if (!existingParticipant) {
-      if (!parsed.displayName) {
-        throw new Error("Display name is required to join a round.");
-      }
+    const matchingDisplayName =
+      !existingParticipant && parsed.displayName
+        ? await tx<Array<{ id: string }>>`
+            select id
+            from participants
+            where round_id = ${invite.round_id}::uuid
+              and lower(display_name) = lower(${parsed.displayName})
+            limit 1
+          `
+        : [];
 
+    const decision = resolveClaimDecision({
+      roundStatus: lockedRound.status,
+      inviterParticipantId: invite.inviter_participant_id,
+      inviterParentParticipantId: invite.inviter_parent_participant_id,
+      claimantParticipantId: existingParticipant?.id ?? null,
+      displayName: parsed.displayName,
+      isDisplayNameAvailable: matchingDisplayName.length === 0,
+    });
+
+    if (decision.type === "round_already_complete") {
+      await tx`
+        update invites
+        set status = 'locked'
+        where id = ${invite.invite_id}::uuid
+          and status = 'pending'
+      `;
+
+      return {
+        type: "round_already_complete",
+        roundSlug: invite.round_slug,
+      } satisfies ClaimInviteResult;
+    }
+
+    if (decision.type === "joined") {
       try {
-        const [participant] = await tx<ParticipantRow[]>`
+        const participants = (await tx`
           insert into participants (
             round_id,
             auth_user_id,
@@ -510,12 +532,13 @@ export async function claimInviteForUser(
           values (
             ${invite.round_id}::uuid,
             ${user.id}::uuid,
-            ${parsed.displayName},
+            ${parsed.displayName!},
             ${email},
             ${invite.inviter_participant_id}::uuid
           )
           returning id, display_name
-        `;
+        `) as unknown as ParticipantRow[];
+        const [participant] = participants;
 
         await tx`
           insert into connections (
@@ -548,20 +571,18 @@ export async function claimInviteForUser(
         } satisfies ClaimInviteResult;
       } catch (error) {
         if (isUniqueViolation(error, "participants_round_lower_display_name_idx")) {
-          throw new Error("That display name is already taken in this round.");
+          throw new AppError(
+            "That display name is already taken in this round.",
+            409,
+            "duplicate_display_name",
+          );
         }
 
         throw error;
       }
     }
 
-    const outcome = resolveExistingParticipantOutcome({
-      inviterParticipantId: invite.inviter_participant_id,
-      inviterParentParticipantId: invite.inviter_parent_participant_id,
-      existingParticipantId: existingParticipant.id,
-    });
-
-    if (outcome === "self_claim" || outcome === "immediate_return") {
+    if (decision.type === "self_claim" || decision.type === "immediate_return") {
       await tx`
         update invites
         set
@@ -571,7 +592,7 @@ export async function claimInviteForUser(
         where id = ${invite.invite_id}::uuid
       `;
 
-      if (outcome === "self_claim") {
+      if (decision.type === "self_claim") {
         return {
           type: "self_claim",
           roundSlug: invite.round_slug,
@@ -686,7 +707,12 @@ export async function getFinalGraph(
     return null;
   }
 
-  if (roundAccess.status !== "completed" || !roundAccess.completed_at) {
+  if (
+    !assertFinalGraphAvailable({
+      roundStatus: roundAccess.status,
+      completedAt: roundAccess.completed_at,
+    })
+  ) {
     return "pending" as const;
   }
 
@@ -717,7 +743,7 @@ export async function getFinalGraph(
 
   return {
     slug,
-    completedAt: roundAccess.completed_at,
+    completedAt: roundAccess.completed_at!,
     nodes: nodes.map((node) => ({
       id: node.id,
       label: node.display_name,

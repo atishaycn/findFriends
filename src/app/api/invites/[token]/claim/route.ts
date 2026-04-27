@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { jsonError } from "@/lib/http";
+import { jsonAppError, jsonError } from "@/lib/http";
 import { claimInviteForUser } from "@/lib/rounds";
 
 export async function POST(
@@ -20,10 +20,6 @@ export async function POST(
 
     return NextResponse.json(claimResult);
   } catch (error) {
-    return jsonError(
-      error instanceof Error ? error.message : "Could not claim the invite.",
-      400,
-      "claim_invite_failed",
-    );
+    return jsonAppError(error, "Could not claim the invite.", 400, "claim_invite_failed");
   }
 }

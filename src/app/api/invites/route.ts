@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { jsonError } from "@/lib/http";
+import { jsonAppError, jsonError } from "@/lib/http";
 import { createInviteForUser } from "@/lib/rounds";
 
 export async function POST(request: Request) {
@@ -17,10 +17,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(invite, { status: 201 });
   } catch (error) {
-    return jsonError(
-      error instanceof Error ? error.message : "Could not create the invite.",
-      400,
-      "create_invite_failed",
-    );
+    return jsonAppError(error, "Could not create the invite.", 400, "create_invite_failed");
   }
 }
