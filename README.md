@@ -1,6 +1,6 @@
 # Friend Graph
 
-Friend Graph is a mobile-first web app where one starter creates a round, friends pass invite links through chat, and the full network unlocks only when a valid loop closes the round.
+Friend Graph is a mobile-first social game where one person starts a round, friends pass invite links through chat, and the full graph stays hidden until a valid closing loop finishes the round.
 
 ## Product model
 
@@ -15,10 +15,11 @@ Friend Graph is a mobile-first web app where one starter creates a round, friend
 - Next.js 16 App Router
 - TypeScript
 - Tailwind CSS v4
+- Framer Motion
+- Phosphor Icons
 - Supabase Auth for magic-link email sign-in
 - Supabase Postgres via `postgres`
 - Resend for completion emails
-- D3 for the final graph layout
 
 ## Environment
 
@@ -101,11 +102,11 @@ Those brand the confirmation and sign-in emails with `findFriends`.
 
 ## Core routes
 
-- `/`: landing page and magic-link entry
-- `/studio`: create rounds and list your active/completed rounds
-- `/r/:slug`: participant workspace with invite generation and polling status
+- `/`: guided landing page and email sign-in
+- `/studio`: create rounds and reopen active/finished rounds
+- `/invite/:token`: claim an invite link
+- `/r/:slug`: participant workspace with invite generation and status tracking
 - `/r/:slug/graph`: final graph reveal
-- `/invite/:token`: invite claim flow
 
 ## API routes
 
@@ -114,6 +115,7 @@ Those brand the confirmation and sign-in emails with `findFriends`.
 - `POST /api/invites/:token/claim`
 - `GET /api/rounds/:slug`
 - `GET /api/rounds/:slug/graph`
+- `GET /auth/callback`
 
 ## Database schema
 

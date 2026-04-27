@@ -1,4 +1,10 @@
 import Link from "next/link";
+import {
+  House,
+  SignOut,
+  Pulse,
+  SquaresFour,
+} from "@phosphor-icons/react/dist/ssr";
 import { signOutAction } from "@/app/actions";
 import { homePath, studioPath } from "@/lib/routes";
 
@@ -8,40 +14,54 @@ export function SiteHeader({
   userEmail?: string | null;
 }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-[color:rgba(7,11,22,0.62)] backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <header className="glass-bar sticky top-0 z-20">
+      <div className="content-wrap py-3">
+        <div className="nav-shell flex items-center justify-between gap-4 rounded-full px-3 py-2 sm:px-4">
         <Link
           href={homePath()}
-          className="font-display text-3xl tracking-[0.08em] text-ink sm:text-4xl"
+          className="inline-flex items-center gap-3 rounded-full px-2 py-2 text-sm font-semibold tracking-[-0.02em] text-ink"
         >
-          findFriends
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white/80 text-accent shadow-[0_14px_28px_-22px_rgba(72,56,36,0.44)]">
+            <Pulse size={16} weight="fill" />
+          </span>
+          <span className="hidden sm:inline">findFriends</span>
         </Link>
-        <div className="flex items-center gap-3 text-sm text-ink/72">
+        <div className="flex items-center gap-1 text-sm text-muted sm:gap-2">
+          <Link
+            href={homePath()}
+            className="dock-link text-sm font-medium"
+          >
+            <House size={16} weight="bold" />
+            <span className="hidden sm:inline">Home</span>
+          </Link>
           {userEmail ? (
             <>
               <Link
                 href={studioPath()}
-                className="rounded-full border border-white/12 px-4 py-2 transition hover:border-white/25 hover:bg-white/10"
+                className="dock-link text-sm font-medium"
               >
-                Studio
+                <SquaresFour size={16} weight="bold" />
+                <span className="hidden sm:inline">Studio</span>
               </Link>
-              <span className="hidden rounded-full border border-white/12 bg-white/6 px-4 py-2 md:inline-flex">
+              <span className="hidden rounded-full border border-line bg-white/60 px-4 py-2 md:inline-flex">
                 {userEmail}
               </span>
               <form action={signOutAction}>
                 <button
                   type="submit"
-                  className="rounded-full bg-white/92 px-4 py-2 text-[#10131d] transition hover:bg-white"
+                  className="secondary-button px-4 py-2 text-sm"
                 >
-                  Sign out
+                  <SignOut size={16} weight="bold" />
+                  <span className="hidden sm:inline">Sign out</span>
                 </button>
               </form>
             </>
           ) : (
-            <span className="rounded-full border border-white/12 bg-white/6 px-4 py-2">
-              Email sign in
+            <span className="hidden rounded-full border border-line bg-white/60 px-4 py-2 md:inline-flex">
+              Email sign-in
             </span>
           )}
+        </div>
         </div>
       </div>
     </header>
